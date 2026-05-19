@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Limitless Trade Copier</title>
+<meta name="description" content="Complete your purchase of Limitless Trade Copier. Pay with USDT (TRC20) for instant license delivery.">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-void: #050507;
+  --bg-base: #0A0A0C;
+  --bg-panel: #111114;
+  --bg-raised: #16161A;
+  --border-faint: #1A1A1D;
+  --border-default: #2A2A30;
+  --border-strong: #3A3A42;
+  --text-primary: #F5F5F7;
+  --text-secondary: #C0C0C5;
+  --text-muted: #88888F;
+  --text-faint: #5A5A60;
+  --brand: #FF9F1C;
+  --brand-glow: #FFB347;
+  --brand-tint: rgba(255, 159, 28, 0.08);
+  --accent: #22D3EE;
+  --ok: #10B981;
+  --err: #F43F5E;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui: 'Geist', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-ui);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.55;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+.nav { padding: 18px 24px; border-bottom: 1px solid var(--border-faint); }
+.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+.brand {
+  font-family: var(--font-display); font-weight: 600; font-size: 20px;
+  letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
+}
+.brand-mark { width: 28px; height: 18px; position: relative; }
+.brand-mark::before, .brand-mark::after {
+  content: ''; position: absolute; width: 12px; height: 12px;
+  border-radius: 50%; top: 3px;
+}
+.brand-mark::before { left: 0; background: var(--accent); }
+.brand-mark::after { right: 0; background: var(--brand); }
+.brand-bar {
+  position: absolute; left: 50%; top: 2px; transform: translateX(-50%);
+  width: 4px; height: 14px; background: var(--brand); border-radius: 2px;
+}
+.back-link {
+  margin-left: auto; color: var(--text-muted); font-size: 14px;
+}
+.back-link:hover { color: var(--text-primary); }
+
+main {
+  max-width: 1080px; margin: 0 auto; padding: 60px 24px;
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  main { grid-template-columns: 1fr; gap: 32px; padding: 32px 20px; }
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4vw, 44px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 12px;
+}
+.sub {
+  color: var(--text-secondary); margin-bottom: 32px;
+}
+
+.section {
+  margin-bottom: 28px;
+}
+.section h2 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--brand);
+  margin-bottom: 12px;
+}
+
+/* Plan selector */
+.plan-grid {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.plan-card {
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: var(--bg-panel);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+}
+.plan-card:hover { border-color: var(--border-strong); }
+.plan-card.selected {
+  border-color: var(--brand);
+  background: linear-gradient(180deg, rgba(255,159,28,0.04), var(--bg-panel));
+}
+.plan-radio {
+  width: 20px; height: 20px; border: 2px solid var(--border-strong);
+  border-radius: 50%; flex-shrink: 0; position: relative;
+  transition: border-color 0.15s;
+}
+.plan-card.selected .plan-radio { border-color: var(--brand); }
+.plan-card.selected .plan-radio::after {
+  content: ''; position: absolute; inset: 3px;
+  background: var(--brand); border-radius: 50%;
+}
+.plan-info .name { font-weight: 600; font-size: 15px; }
+.plan-info .desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.plan-price {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+.plan-price .pm {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11px; font-weight: 400;
+  color: var(--text-muted);
+  text-align: right;
+  letter-spacing: 0;
+  margin-top: -2px;
+}
+.plan-badge {
+  display: inline-block;
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--brand);
+  background: var(--brand-tint);
+  padding: 2px 7px; border-radius: 4px;
+  vertical-align: middle;
+}
+
+/* Email field */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--brand); letter-spacing: 0.1em; text-transform: uppercase; }
+.field input {
+  font-family: var(--font-ui); font-size: 15px;
+  padding: 12px 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field input:focus { border-color: var(--brand); }
+.field .hint { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Pay method choice */
+.pay-tabs {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; margin-bottom: 16px;
+}
+.pay-tab {
+  padding: 14px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background: var(--bg-panel);
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  transition: border-color 0.15s, opacity 0.15s;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+}
+.pay-tab:hover:not(.disabled):not(.active) { border-color: var(--border-strong); }
+.pay-tab.active {
+  border-color: var(--brand);
+  background: linear-gradient(180deg, rgba(255,159,28,0.04), var(--bg-panel));
+}
+.pay-tab.disabled {
+  opacity: 0.4; cursor: not-allowed; position: relative;
+}
+.pay-tab .ico { font-size: 18px; }
+.pay-tab .soon {
+  font-family: var(--font-mono); font-size: 8px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted);
+  background: var(--bg-raised);
+  padding: 2px 5px; border-radius: 3px;
+}
+
+/* Payment instruction box (shown based on selected pay method) */
+.pay-panel {
+  display: none;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--bg-panel);
+  padding: 22px;
+  margin-bottom: 16px;
+}
+.pay-panel.active { display: block; }
+.pay-panel h3 {
+  font-size: 15px; font-weight: 600;
+  margin-bottom: 8px;
+}
+.pay-panel p { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; }
+
+/* Bank details rows */
+.bank-flag {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--brand);
+  margin: 16px 0 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.bank-flag:first-child { margin-top: 0; }
+.bank-details {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-faint);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 13px;
+}
+.bank-row {
+  display: grid; grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+.bank-row + .bank-row { border-top: 1px dashed var(--border-faint); }
+.bank-row .label { color: var(--text-muted); font-size: 12px; }
+.bank-row .value { font-family: var(--font-mono); }
+.bank-row .copy {
+  font-size: 11px; color: var(--brand);
+  background: transparent; border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.bank-row .copy:hover { background: var(--brand-tint); }
+
+.bank-confirm {
+  margin-top: 16px;
+  padding: 14px;
+  background: rgba(34, 211, 238, 0.06);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 8px;
+  font-size: 13px;
+}
+.bank-confirm strong { color: var(--accent); }
+
+.stripe-soon {
+  text-align: center;
+  padding: 32px 16px;
+}
+.stripe-soon .big { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; color: var(--text-primary); }
+.stripe-soon .small { color: var(--text-muted); font-size: 13px; }
+
+/* Pay button */
+.pay-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--brand);
+  color: var(--bg-void);
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.pay-btn:hover:not(:disabled) {
+  background: var(--brand-glow);
+  transform: translateY(-1px);
+}
+.pay-btn:disabled {
+  opacity: 0.5; cursor: not-allowed;
+}
+.pay-btn.loading::after {
+  content: '...';
+  animation: dots 1.4s steps(3, end) infinite;
+}
+@keyframes dots { 33% { content: '.'; } 66% { content: '..'; } 100% { content: '...'; } }
+
+.error-msg {
+  display: none;
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #FECDD3;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.error-msg.show { display: block; }
+
+/* Order summary (right column) */
+.summary {
+  position: sticky; top: 24px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-default);
+  border-radius: 14px;
+  padding: 28px;
+}
+.summary h3 { font-size: 15px; font-weight: 600; margin-bottom: 18px; }
+.summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0;
+  font-size: 14px;
+}
+.summary-row + .summary-row { border-top: 1px solid var(--border-faint); }
+.summary-row .l { color: var(--text-muted); }
+.summary-row .r { font-weight: 500; }
+.summary-total {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 16px; margin-top: 8px;
+  border-top: 1px solid var(--border-default);
+}
+.summary-total .l { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.summary-total .r {
+  font-family: var(--font-display); font-size: 36px; font-weight: 500;
+  letter-spacing: -0.025em;
+}
+.trust {
+  margin-top: 18px;
+  font-size: 11px; color: var(--text-muted);
+  line-height: 1.6;
+}
+.trust .item { display: flex; gap: 8px; padding: 4px 0; }
+.trust .tick { color: var(--ok); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <span class="brand-mark"><span class="brand-bar"></span></span>
+      Limitless
+    </a>
+    <a href="/" class="back-link">← Back to site</a>
+  </div>
+</nav>
+
+<main>
+  <!-- Left column: plan + email + payment method -->
+  <div>
+    <h1>Checkout</h1>
+    <p class="sub">Pick a plan, enter your email, and pay. The license arrives in your inbox within ~2 minutes of payment confirmation.</p>
+
+    <div class="section">
+      <h2>1. Plan</h2>
+      <div class="plan-grid" id="plans">
+        <label class="plan-card" data-plan="1month" data-price="50">
+          <span class="plan-radio"></span>
+          <div class="plan-info">
+            <div class="name">1 Month</div>
+            <div class="desc">Cancel anytime, 14-day refund window</div>
+          </div>
+          <div class="plan-price">$50<span class="pm">per month</span></div>
+        </label>
+        <label class="plan-card selected" data-plan="3months" data-price="120">
+          <span class="plan-radio"></span>
+          <div class="plan-info">
+            <div class="name">3 Months <span class="plan-badge">Most Popular</span></div>
+            <div class="desc">$40/mo equivalent — save 20%</div>
+          </div>
+          <div class="plan-price">$120<span class="pm">3 months</span></div>
+        </label>
+        <label class="plan-card" data-plan="yearly" data-price="300">
+          <span class="plan-radio"></span>
+          <div class="plan-info">
+            <div class="name">Yearly</div>
+            <div class="desc">$25/mo equivalent — save 50%</div>
+          </div>
+          <div class="plan-price">$300<span class="pm">12 months</span></div>
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>2. Email for license delivery</h2>
+      <div class="field">
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" inputmode="email">
+        <div class="hint">Your license key will be sent here. Use an email you have access to.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>3. Payment method</h2>
+      <div class="pay-tabs">
+        <div class="pay-tab active" data-pay="crypto">
+          <span class="ico">⟁</span>
+          USDT (TRC20)
+        </div>
+        <div class="pay-tab" data-pay="bank">
+          <span class="ico">⚐</span>
+          Bank Transfer
+        </div>
+        <div class="pay-tab disabled" data-pay="stripe">
+          <span class="ico">⊟</span>
+          Card
+          <span class="soon">Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Crypto pane -->
+      <div class="pay-panel active" data-panel="crypto">
+        <h3>Pay with USDT on the TRON network</h3>
+        <p>You'll be redirected to a secure payment page where you'll see the exact amount in USDT and a TRC20 address to send to. Your license is delivered automatically after 1 blockchain confirmation (~2 minutes).</p>
+        <button class="pay-btn" id="payCryptoBtn">Continue to USDT Payment</button>
+        <div class="error-msg" id="cryptoError"></div>
+      </div>
+
+      <!-- Bank pane -->
+      <div class="pay-panel" data-panel="bank">
+        <h3>Manual bank transfer</h3>
+        <p>Send the amount to one of the accounts below, then email a screenshot of the transfer to <a href="mailto:support@limitlesscopier.com" style="color:var(--brand)">support@limitlesscopier.com</a> with your purchase email. License is sent within 24 hours after we verify the transfer.</p>
+
+        <!-- Bank details rows are placeholders - replace with real values -->
+        <div class="bank-flag">🇵🇰 Pakistan (PKR)</div>
+        <div class="bank-details">
+          <div class="bank-row"><span class="label">Bank</span><span class="value" id="pk-bank">[BANK NAME]</span><button class="copy" data-copy="pk-bank">Copy</button></div>
+          <div class="bank-row"><span class="label">Account Title</span><span class="value" id="pk-title">[ACCOUNT TITLE]</span><button class="copy" data-copy="pk-title">Copy</button></div>
+          <div class="bank-row"><span class="label">Account #</span><span class="value" id="pk-acct">[ACCOUNT NUMBER]</span><button class="copy" data-copy="pk-acct">Copy</button></div>
+          <div class="bank-row"><span class="label">IBAN</span><span class="value" id="pk-iban">[IBAN]</span><button class="copy" data-copy="pk-iban">Copy</button></div>
+        </div>
+
+        <div class="bank-flag">🇮🇳 India (INR)</div>
+        <div class="bank-details">
+          <div class="bank-row"><span class="label">Bank</span><span class="value" id="in-bank">[BANK NAME]</span><button class="copy" data-copy="in-bank">Copy</button></div>
+          <div class="bank-row"><span class="label">Account Holder</span><span class="value" id="in-holder">[HOLDER NAME]</span><button class="copy" data-copy="in-holder">Copy</button></div>
+          <div class="bank-row"><span class="label">Account #</span><span class="value" id="in-acct">[ACCOUNT NUMBER]</span><button class="copy" data-copy="in-acct">Copy</button></div>
+          <div class="bank-row"><span class="label">IFSC</span><span class="value" id="in-ifsc">[IFSC CODE]</span><button class="copy" data-copy="in-ifsc">Copy</button></div>
+        </div>
+
+        <div class="bank-flag">🇦🇪 UAE (AED / USD)</div>
+        <div class="bank-details">
+          <div class="bank-row"><span class="label">Bank</span><span class="value" id="ae-bank">[BANK NAME]</span><button class="copy" data-copy="ae-bank">Copy</button></div>
+          <div class="bank-row"><span class="label">Account Holder</span><span class="value" id="ae-holder">[HOLDER NAME]</span><button class="copy" data-copy="ae-holder">Copy</button></div>
+          <div class="bank-row"><span class="label">Account #</span><span class="value" id="ae-acct">[ACCOUNT NUMBER]</span><button class="copy" data-copy="ae-acct">Copy</button></div>
+          <div class="bank-row"><span class="label">IBAN</span><span class="value" id="ae-iban">[IBAN]</span><button class="copy" data-copy="ae-iban">Copy</button></div>
+          <div class="bank-row"><span class="label">SWIFT/BIC</span><span class="value" id="ae-swift">[SWIFT]</span><button class="copy" data-copy="ae-swift">Copy</button></div>
+        </div>
+
+        <div class="bank-confirm">
+          <strong>After paying:</strong> email a screenshot of your transfer receipt + your purchase email to <a href="mailto:support@limitlesscopier.com" style="color:var(--accent)">support@limitlesscopier.com</a>. We verify and send your license within 24 hours.
+        </div>
+      </div>
+
+      <!-- Stripe pane (coming soon) -->
+      <div class="pay-panel" data-panel="stripe">
+        <div class="stripe-soon">
+          <div class="big">Card payments coming soon</div>
+          <div class="small">We're in review with Stripe. While we wait, USDT (TRC20) is the fastest way to start — license arrives in ~2 minutes after payment.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column: order summary -->
+  <aside class="summary">
+    <h3>Order summary</h3>
+    <div class="summary-row"><span class="l">Plan</span><span class="r" id="sumPlan">3 Months</span></div>
+    <div class="summary-row"><span class="l">Currency</span><span class="r">USD → USDT (TRC20)</span></div>
+    <div class="summary-row"><span class="l">License binding</span><span class="r">Your PC hardware</span></div>
+    <div class="summary-total"><span class="l">Total</span><span class="r"><span style="font-size:24px;color:var(--text-secondary)">$</span><span id="sumTotal">120</span></span></div>
+
+    <div class="trust">
+      <div class="item"><span class="tick">✓</span> Email delivery within ~2 min</div>
+      <div class="item"><span class="tick">✓</span> 14-day refund (monthly &amp; 3-month plans)</div>
+      <div class="item"><span class="tick">✓</span> Hardware move-license support included</div>
+    </div>
+  </aside>
+</main>
+
+<script>
+// --- Plan selection ---
+const planEls = document.querySelectorAll('.plan-card');
+const sumPlan = document.getElementById('sumPlan');
+const sumTotal = document.getElementById('sumTotal');
+
+function selectPlan(plan, price, label) {
+  planEls.forEach(el => el.classList.toggle('selected', el.dataset.plan === plan));
+  sumPlan.textContent = label;
+  sumTotal.textContent = price;
+}
+planEls.forEach(el => {
+  el.addEventListener('click', () => {
+    const plan = el.dataset.plan;
+    const price = el.dataset.price;
+    const label = el.querySelector('.plan-info .name').firstChild.textContent.trim();
+    selectPlan(plan, price, label);
+  });
+});
+
+// --- Payment method tabs ---
+document.querySelectorAll('.pay-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    if (tab.classList.contains('disabled')) return;
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelector(`.pay-panel[data-panel="${tab.dataset.pay}"]`).classList.add('active');
+  });
+});
+
+// --- Copy buttons ---
+document.querySelectorAll('.copy').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.getElementById(btn.dataset.copy);
+    if (!target) return;
+    navigator.clipboard.writeText(target.textContent.trim()).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => btn.textContent = orig, 1200);
+    });
+  });
+});
+
+// --- Crypto checkout ---
+const cryptoBtn = document.getElementById('payCryptoBtn');
+const cryptoErr = document.getElementById('cryptoError');
+const emailEl = document.getElementById('email');
+
+// API base - the server endpoint
+const API_BASE = 'https://api.limitlesscopier.com';
+
+function showCryptoError(msg) {
+  cryptoErr.textContent = msg;
+  cryptoErr.classList.add('show');
+}
+function hideCryptoError() {
+  cryptoErr.classList.remove('show');
+}
+
+cryptoBtn.addEventListener('click', async () => {
+  hideCryptoError();
+  const email = emailEl.value.trim();
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    showCryptoError('Please enter a valid email address.');
+    emailEl.focus();
+    return;
+  }
+  const selected = document.querySelector('.plan-card.selected');
+  if (!selected) {
+    showCryptoError('Please select a plan.');
+    return;
+  }
+  const plan = selected.dataset.plan;
+
+  cryptoBtn.disabled = true;
+  cryptoBtn.classList.add('loading');
+  cryptoBtn.textContent = 'Creating payment';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/checkout/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan, email })
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      let msg = 'Could not create payment. Please try again.';
+      try {
+        const j = JSON.parse(t);
+        if (j.error) msg = j.error;
+        else if (j.detail) msg = j.detail;
+      } catch {}
+      throw new Error(msg);
+    }
+    const data = await res.json();
+    if (!data.invoiceUrl) throw new Error('Server did not return an invoice URL.');
+
+    // Redirect to NowPayments hosted checkout
+    window.location.href = data.invoiceUrl;
+  } catch (err) {
+    showCryptoError(err.message || 'Network error. Please try again.');
+    cryptoBtn.disabled = false;
+    cryptoBtn.classList.remove('loading');
+    cryptoBtn.textContent = 'Continue to USDT Payment';
+  }
+});
+</script>
+</body>
+</html>
