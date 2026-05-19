@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ─────────────────────────────────────────────────────────────────
+     SEO METADATA
+     Target keywords: mt5 trade copier, trade copier prop firm,
+     metatrader 5 trade copier, prop firm journal, ftmo trade copier
+     ───────────────────────────────────────────────────────────────── -->
+<title>Limitless — MT5 Trade Copier with Prop Firm Journal & Risk Protection</title>
+<meta name="description" content="The MT5 trade copier for traders running multiple accounts. Mirror trades across any MT5 broker in milliseconds, journal every prop firm challenge, and stop trading before you break a rule. Works with Exness, IC Markets, Pepperstone, FTMO, MyForexFunds, FundedNext and more.">
+
+<meta name="keywords" content="mt5 trade copier, metatrader 5 trade copier, trade copier for prop firm, prop firm trade copier, ftmo trade copier, prop firm journal, mt5 copy trading, multi account copier, funded account copier, drawdown protection, trade replicator, mt5 mirror trades">
+
+<meta name="author" content="Limitless">
+<link rel="canonical" href="https://limitlesscopier.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://limitlesscopier.com/">
+<meta property="og:title" content="Limitless — The MT5 Trade Copier Built for Prop Firm Traders">
+<meta property="og:description" content="Copy trades across unlimited MT5 accounts — any broker, any prop firm. Built-in journal and per-account drawdown protection.">
+<meta property="og:image" content="https://limitlesscopier.com/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Limitless — MT5 Trade Copier with Built-in Prop Firm Journal">
+<meta name="twitter:description" content="Copy trades across unlimited MT5 accounts — any broker, any prop firm. Built-in journal and drawdown protection.">
+
+<!-- Theme -->
+<meta name="theme-color" content="#030508">
+
+<!-- Fonts: Bebas Neue (display), DM Sans (body), DM Mono (numerics + license keys) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- ─────────────────────────────────────────────────────────────────
+     SCHEMA.ORG — Product + Organization + FAQ
+     ───────────────────────────────────────────────────────────────── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Limitless Trade Copier",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Windows 10, Windows 11",
+      "description": "MT5 trade copier with built-in prop firm journal and per-account risk protection.",
+      "offers": [
+        {"@type": "Offer", "name": "1 Month", "price": "50", "priceCurrency": "USD"},
+        {"@type": "Offer", "name": "3 Months", "price": "120", "priceCurrency": "USD"},
+        {"@type": "Offer", "name": "Yearly", "price": "300", "priceCurrency": "USD"}
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "37",
+        "bestRating": "5"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "Limitless",
+      "url": "https://limitlesscopier.com",
+      "email": "support@limitlesscopier.com"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Does Limitless work with my prop firm?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Limitless works with any prop firm that gives you MT5 login credentials — including FTMO, MyForexFunds, FundedNext, The Funded Trader, E8, and most others. Connect each account once; the copier handles the rest."}},
+        {"@type": "Question", "name": "Will my prop firm detect the copier?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Limitless runs locally on your PC and connects via the standard MT5 manager API. It doesn't inject EAs into your terminal or modify the platform. From the prop firm's perspective, you're placing trades manually from your own machine."}},
+        {"@type": "Question", "name": "What happens if I hit my daily loss limit?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Limitless auto-pauses copying to that specific account the moment you cross your configured threshold (typically 60-80% of the firm's limit). Every other account keeps trading."}},
+        {"@type": "Question", "name": "Can I move my license to another PC?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Yes. Email support@limitlesscopier.com from your license email and we release the hardware binding within 24 hours."}}
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ============================================================
+   DESIGN TOKENS — matches the new visual system:
+   gold/amber primary, deep navy base, green = master/buy,
+   red = slave/sell/warning, cyan accent used sparingly.
+   ============================================================ */
+:root{
+  --gold:#FFD700;
+  --gold2:#FFA500;
+  --green:#22C55E;
+  --red:#EF4444;
+  --cyan:#22D3EE;
+
+  --bg:#030508;
+  --bg2:#080d15;
+  --bg3:#0d1525;
+  --bg4:#121b2e;
+
+  --text:#fff;
+  --text2:rgba(255,255,255,.65);
+  --text3:rgba(255,255,255,.40);
+  --text4:rgba(255,255,255,.20);
+
+  --border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.14);
+
+  --gold-glow:rgba(255,215,0,.25);
+
+  --max:1200px;
+}
+
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.55;
+}
+a{color:inherit;text-decoration:none;}
+img,svg{max-width:100%;display:block;}
+
+/* Cursor glow effect that follows the mouse */
+.cursor-glow{
+  position:fixed;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.05) 0%,transparent 70%);
+  pointer-events:none;transform:translate(-50%,-50%);
+  z-index:1;transition:opacity .3s;mix-blend-mode:screen;
+}
+
+main,header,footer,section,nav{position:relative;z-index:2;}
+
+/* ============================================================
+   NAV — fixed glassmorphic top bar
+   ============================================================ */
+nav.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 60px;
+  background:linear-gradient(180deg,rgba(3,5,8,.92) 0%,rgba(3,5,8,.7) 100%);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.nav-brand{display:flex;align-items:center;gap:14px;}
+.nav-mark{position:relative;width:38px;height:22px;flex-shrink:0;}
+.nav-mark .c{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;transform:translateY(-50%);}
+.nav-mark .c1{left:0;background:var(--green);}
+.nav-mark .c2{right:0;background:var(--red);}
+.nav-mark .lens{position:absolute;top:50%;left:50%;width:6px;height:18px;
+  background:var(--gold);border-radius:50%;
+  transform:translate(-50%,-50%);}
+.nav-wordmark{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#fff;line-height:1;}
+.nav-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--gold);margin-top:2px;}
+
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{color:var(--text2);font-size:13px;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:#fff;}
+
+.nav-cta{
+  background:var(--gold);color:#000;font-weight:700;font-size:13px;
+  padding:11px 24px;border-radius:6px;letter-spacing:.04em;
+  transition:all .2s;border:none;cursor:pointer;
+}
+.nav-cta:hover{background:#fff;transform:translateY(-1px);box-shadow:0 8px 20px var(--gold-glow);}
+
+/* Shared button styles for inline CTAs */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  border:1px solid transparent;cursor:pointer;transition:all .25s;
+  letter-spacing:.04em;
+}
+.btn-lg{padding:17px 42px;font-size:15px;}
+.btn-primary{
+  background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;font-weight:700;
+  box-shadow:0 0 40px rgba(255,215,0,.25);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(255,215,0,.45);}
+.btn-ghost{background:transparent;border-color:rgba(255,255,255,.18);color:#fff;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05);}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  position:relative;overflow:hidden;padding:140px 60px 60px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,215,0,.09) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 85% 50%,rgba(255,100,0,.06) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 80% at 15% 80%,rgba(34,197,94,.05) 0%,transparent 60%);
+  z-index:0;
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,215,0,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,215,0,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 20%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 20%,transparent 80%);
+}
+.hero-inner{
+  max-width:var(--max);margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1.1fr 1fr;gap:60px;
+  align-items:center;position:relative;z-index:2;
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);
+  border-radius:100px;padding:8px 22px;font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:32px;
+  animation:fadeDown .8s ease both;
+}
+.hero-eyebrow .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--gold);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.4);}}
+
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,7vw,104px);
+  line-height:.94;letter-spacing:2px;margin-bottom:28px;color:#fff;
+  animation:fadeUp .9s .1s ease both;
+}
+.hero h1 em{
+  font-style:normal;display:block;
+  background:linear-gradient(135deg,#FFD700 0%,#FF6400 50%,#FFD700 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmer 4s linear 1s infinite;
+}
+@keyframes shimmer{0%{background-position:0% center;}100%{background-position:200% center;}}
+
+.hero-sub{
+  font-size:18px;color:var(--text2);line-height:1.7;max-width:560px;margin-bottom:36px;
+  font-weight:300;animation:fadeUp .9s .3s ease both;
+}
+.hero-sub strong{color:#fff;font-weight:600;}
+
+.hero-ctas{
+  display:flex;gap:16px;flex-wrap:wrap;
+  animation:fadeUp .9s .4s ease both;
+}
+
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:24px 36px;margin-top:36px;
+  font-size:13px;color:var(--text2);
+  animation:fadeUp .9s .5s ease both;
+}
+.hero-meta .tick{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:50%;
+  background:rgba(34,197,94,.12);color:var(--green);
+  font-size:11px;font-weight:700;margin-right:8px;vertical-align:middle;
+}
+.hero-meta strong{color:#fff;font-weight:600;}
+
+/* Hero visualization — 3-splash rotating carousel
+   Each splash holds an SVG with its own micro-animations.
+   Cycle is JS-driven; CSS handles fades + per-splash motion. */
+.hero-viz{
+  animation:fadeUp 1.1s .6s ease both;
+  position:relative;
+  width:100%;
+  max-width:560px;
+  margin-left:auto;
+}
+.splash-frame{
+  position:relative;
+  background:linear-gradient(140deg,rgba(13,21,37,.9) 0%,rgba(8,13,21,.95) 100%);
+  border:1px solid var(--border2);
+  border-radius:18px;
+  padding:32px 24px 24px;
+  aspect-ratio:520/500;
+  overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(255,215,0,.06);
+}
+.splash-frame::before{
+  /* subtle ambient grid behind splashes */
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,215,0,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,215,0,.025) 1px,transparent 1px);
+  background-size:40px 40px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 90%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 90%);
+  pointer-events:none;
+}
+.splash{
+  position:absolute;inset:32px 24px 24px;
+  opacity:0;transform:translateX(20px);
+  transition:opacity .55s ease,transform .55s ease;
+  pointer-events:none;
+  display:flex;flex-direction:column;
+}
+.splash.splash-active{
+  opacity:1;transform:translateX(0);pointer-events:auto;
+}
+.splash-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.splash-tag-num{
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;
+  color:#fff;padding:2px 8px;
+  background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);
+  border-radius:4px;
+}
+.splash svg{width:100%;height:auto;flex:1;min-height:0;}
+
+/* Shared SVG element styles inside splashes */
+.vn{fill:rgba(13,21,37,.6);stroke:var(--border2);stroke-width:1;}
+.vl{font-family:'DM Mono',monospace;font-size:10px;fill:var(--text3);letter-spacing:.06em;}
+.vl.sub{font-size:9px;letter-spacing:.1em;}
+.vl.big{font-size:14px;fill:#fff;letter-spacing:.05em;}
+.vl.gold{fill:var(--gold);}
+.vbr{fill:var(--gold);font-weight:700;}
+.vb{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.2px;fill:#fff;}
+.vb.sm{font-size:16px;}
+.vb.huge{font-size:42px;letter-spacing:1.5px;}
+.vb.gold{fill:url(#ringGrad);}
+.vb.green{fill:var(--green);}
+
+/* Splash 1 — Copier flow paths + pulses */
+.vf{fill:none;stroke:rgba(255,215,0,.22);stroke-width:1.5;stroke-dasharray:4 4;}
+.pf{filter:drop-shadow(0 0 4px var(--gold));}
+.splash[data-splash="0"].splash-active .pf-a{offset-path:path("M 220 200 Q 290 200 360 90");animation:flow 2.2s linear infinite;}
+.splash[data-splash="0"].splash-active .pf-b{offset-path:path("M 220 200 Q 290 200 360 190");animation:flow 2.2s linear .55s infinite;}
+.splash[data-splash="0"].splash-active .pf-c{offset-path:path("M 220 200 Q 290 200 360 290");animation:flow 2.2s linear 1.1s infinite;}
+.splash[data-splash="0"].splash-active .pf-d{offset-path:path("M 220 200 Q 290 200 360 380");animation:flow 2.2s linear 1.65s infinite;}
+.pf{opacity:0;}
+.splash[data-splash="0"].splash-active .pf{opacity:1;}
+@keyframes flow{
+  0%{offset-distance:0%;opacity:0;}
+  10%{opacity:1;}
+  90%{opacity:1;}
+  100%{offset-distance:100%;opacity:0;}
+}
+
+/* Splash 2 — Journal: ring fill + daily loss bar */
+.tile{fill:rgba(13,21,37,.5);stroke:var(--border);stroke-width:1;}
+.splash[data-splash="1"].splash-active .ring-anim{
+  animation:ring-fill 1.6s .3s cubic-bezier(.22,.65,.36,1) forwards;
+}
+@keyframes ring-fill{
+  from{stroke-dashoffset:490;}
+  to{stroke-dashoffset:157;} /* 68% of 490 ≈ 333 used, so offset = 157 */
+}
+.dl-fill{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);}
+.splash[data-splash="1"].splash-active .dl-fill{
+  animation:dl-grow 1.2s .8s ease-out forwards;
+}
+@keyframes dl-grow{
+  from{transform:scaleX(0);}
+  to{transform:scaleX(1);}
+}
+.hm rect{opacity:0;}
+.splash[data-splash="1"].splash-active .hm rect{
+  animation:hm-in .4s ease-out forwards;
+}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(1){animation-delay:.6s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(2){animation-delay:.66s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(3){animation-delay:.72s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(4){animation-delay:.78s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(5){animation-delay:.84s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(6){animation-delay:.90s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(7){animation-delay:.96s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(8){animation-delay:1.02s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(9){animation-delay:1.08s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(10){animation-delay:1.14s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(11){animation-delay:1.20s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(12){animation-delay:1.26s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(13){animation-delay:1.32s;}
+.splash[data-splash="1"].splash-active .hm rect:nth-child(14){animation-delay:1.38s;}
+@keyframes hm-in{
+  from{opacity:0;transform:translateY(4px);}
+  to{opacity:var(--o,1);transform:translateY(0);}
+}
+
+/* Splash 3 — Protector: loss meter fills then shield slams in */
+.loss-fill{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);}
+.splash[data-splash="2"].splash-active .loss-fill{
+  animation:loss-rise 1.6s .2s ease-out forwards;
+}
+@keyframes loss-rise{
+  0%{transform:scaleX(0);}
+  100%{transform:scaleX(1);} /* fills to 4% threshold */
+}
+.shield-pop{opacity:0;transform-box:fill-box;transform-origin:center;}
+.splash[data-splash="2"].splash-active .shield-pop{
+  animation:shield-slam .6s 1.6s cubic-bezier(.34,1.7,.5,1) forwards;
+}
+@keyframes shield-slam{
+  0%{opacity:0;transform:scale(.3);}
+  60%{opacity:1;transform:scale(1.15);}
+  100%{opacity:1;transform:scale(1);}
+}
+.alert-row{opacity:0;}
+.splash[data-splash="2"].splash-active .alert-row{
+  animation:alert-in .5s 2.2s ease-out forwards;
+}
+
+@keyframes alert-in{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Splash tabs below the frame */
+.splash-tabs{
+  display:flex;gap:8px;margin-top:16px;justify-content:center;
+}
+.splash-tab{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;border:1px solid var(--border);
+  padding:8px 14px;border-radius:100px;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;
+  color:var(--text3);transition:all .2s;
+}
+.splash-tab .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--text4);
+  transition:all .2s;
+}
+.splash-tab:hover{border-color:var(--border2);color:var(--text2);}
+.splash-tab.is-active{
+  border-color:rgba(255,215,0,.4);
+  background:rgba(255,215,0,.05);
+  color:var(--gold);
+}
+.splash-tab.is-active .dot{
+  background:var(--gold);box-shadow:0 0 8px var(--gold);
+  animation:pulse 2s infinite;
+}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+/* ============================================================
+   GENERIC SECTION
+   ============================================================ */
+section{padding:120px 60px;position:relative;}
+.section-inner{max-width:var(--max);margin:0 auto;}
+.section-head{margin-bottom:80px;max-width:780px;}
+.section-head.center{margin-left:auto;margin-right:auto;text-align:center;}
+.section-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.section-eyebrow::before{content:'';display:block;width:30px;height:1px;background:var(--gold);}
+.section-head.center .section-eyebrow{justify-content:center;}
+.section-head.center .section-eyebrow::before{display:none;}
+.section-head h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,4.6vw,72px);line-height:1;letter-spacing:2px;margin-bottom:22px;
+}
+.section-head h2 em{
+  font-style:normal;
+  background:linear-gradient(135deg,#FFD700,#FFA500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.section-head p{
+  font-size:17px;color:var(--text2);line-height:1.7;max-width:640px;
+}
+.section-head.center p{margin-left:auto;margin-right:auto;}
+
+/* ============================================================
+   SOCIAL PROOF BAR
+   ============================================================ */
+.proof{
+  background:linear-gradient(90deg,
+    rgba(255,215,0,.04) 0%,
+    rgba(255,255,255,.02) 50%,
+    rgba(34,197,94,.04) 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:28px 60px;
+}
+.proof-inner{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center;
+}
+.proof-label{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text3);
+}
+.proof-firms{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:center;}
+.proof-firms span{
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;
+  color:var(--text2);transition:color .2s;
+}
+.proof-firms span:hover{color:#fff;}
+
+/* ============================================================
+   PROBLEM
+   ============================================================ */
+.problem{background:var(--bg);}
+.problem-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.problem-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:20px;
+  padding:36px 32px;position:relative;overflow:hidden;transition:all .3s;
+}
+.problem-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#EF4444,#FF6400,transparent);
+}
+.problem-card:hover{
+  border-color:rgba(239,68,68,.25);transform:translateY(-4px);
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.problem-card .icon{
+  width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;margin-bottom:24px;
+  background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.18);
+  font-family:'Bebas Neue',sans-serif;color:var(--red);
+}
+.problem-card h3{
+  font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1.5px;
+  margin-bottom:14px;color:#fff;
+}
+.problem-card p{font-size:14px;color:var(--text2);line-height:1.7;}
+
+/* ============================================================
+   BRIDGE — divider between problem and solution
+   ============================================================ */
+.bridge{
+  padding:40px 60px;
+  background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 50%,var(--bg) 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.bridge-line{
+  max-width:var(--max);margin:0 auto;
+  display:flex;justify-content:center;align-items:center;flex-wrap:wrap;
+  gap:18px 28px;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(22px,3vw,38px);
+  letter-spacing:2px;
+}
+.bridge-line>span:not(.plus){
+  background:linear-gradient(135deg,#FFD700,#FFA500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.bridge-line .plus{color:var(--text3);font-weight:300;}
+
+/* ============================================================
+   PILLARS (alternating 2-col rows)
+   ============================================================ */
+.pillars .section-inner{max-width:var(--max);}
+.pillar{
+  display:grid;grid-template-columns:1fr 1.05fr;gap:80px;
+  align-items:center;margin-bottom:140px;
+}
+.pillar:last-child{margin-bottom:0;}
+.pillar:nth-child(even){grid-template-columns:1.05fr 1fr;}
+.pillar:nth-child(even) .pillar-text{order:2;}
+.pillar:nth-child(even) .mockup{order:1;}
+
+.pillar-number{
+  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.15em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:18px;
+}
+.pillar-text h3{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(32px,3.8vw,56px);line-height:1.02;letter-spacing:2px;
+  margin-bottom:22px;color:#fff;
+}
+.pillar-text h3 em{
+  font-style:normal;
+  background:linear-gradient(135deg,#FFD700,#FFA500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.pillar-text p{
+  font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:540px;
+}
+.pillar-list{list-style:none;display:flex;flex-direction:column;gap:14px;max-width:540px;}
+.pillar-list li{
+  display:flex;gap:14px;align-items:flex-start;
+  font-size:14px;color:var(--text2);line-height:1.6;
+}
+.pillar-list li::before{
+  content:'';flex-shrink:0;
+  width:6px;height:6px;border-radius:50%;background:var(--gold);
+  margin-top:9px;box-shadow:0 0 8px var(--gold-glow);
+}
+
+/* Mockup windows */
+.mockup{
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,.45));
+}
+.mockup-window{
+  background:var(--bg);border:1px solid var(--border2);border-radius:14px;
+  overflow:hidden;box-shadow:0 0 80px rgba(255,215,0,.06);
+}
+.mockup-titlebar{
+  background:#000;padding:10px 14px;
+  display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);
+}
+.mockup-dot{width:10px;height:10px;border-radius:50%;}
+.mockup-dot.r{background:#ff5f57;}
+.mockup-dot.y{background:#ffbd2e;}
+.mockup-dot.g{background:#28c940;}
+.mockup-title{
+  font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);
+  margin-left:10px;letter-spacing:.05em;
+}
+.mockup-body{padding:20px;background:var(--bg2);}
+
+/* Mockup 1 — copier rows */
+.mock-row{
+  display:grid;grid-template-columns:1.6fr 1fr 1.2fr;gap:14px;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  align-items:center;
+}
+.mock-row:last-child{border-bottom:none;}
+.mock-row .name{font-family:'DM Mono',monospace;font-size:11px;color:#fff;}
+.mock-row .balance{
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;
+  color:#fff;text-align:right;
+}
+.mock-row .tag{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
+  padding:5px 10px;border-radius:4px;text-align:center;text-transform:uppercase;
+  border:1px solid transparent;
+}
+.tag-master{background:rgba(34,197,94,.1);color:var(--green);border-color:rgba(34,197,94,.25);}
+.tag-slave{background:rgba(255,215,0,.08);color:var(--gold);border-color:rgba(255,215,0,.25);}
+.tag-paused{background:rgba(239,68,68,.08);color:var(--red);border-color:rgba(239,68,68,.25);}
+
+/* Mockup 2 — journal stats */
+.mock-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px;
+}
+.mock-stat{
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;
+}
+.mock-stat-label{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;
+  color:var(--text3);text-transform:uppercase;margin-bottom:6px;
+}
+.mock-stat-value{
+  font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;
+  color:#fff;line-height:1;
+}
+.mock-stat-value.ok{color:var(--green);}
+.mock-stat-value.brand{
+  background:linear-gradient(135deg,#FFD700,#FFA500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.mock-bar{
+  width:100%;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.mock-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,#FFD700,#FFA500);
+  box-shadow:0 0 12px var(--gold-glow);
+}
+
+/* Mockup 3 — protector alerts */
+.mock-alert{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:14px 16px;border-radius:10px;margin-bottom:10px;
+  background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.3);
+}
+.mock-alert:last-child{margin-bottom:0;}
+.mock-alert-icon{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:14px;color:#000;font-weight:700;
+  background:var(--red);
+}
+.mock-alert-text{font-size:12px;color:var(--text2);line-height:1.6;}
+.mock-alert-text strong{display:block;color:#fff;font-size:13px;margin-bottom:3px;font-weight:600;}
+
+/* ============================================================
+   COMPARISON TABLE
+   ============================================================ */
+.compare{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);}
+.compare-table{
+  margin-top:60px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+}
+.compare-row{
+  display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;
+  border-bottom:1px solid var(--border);
+}
+.compare-row:last-child{border-bottom:none;}
+.compare-row.head{background:rgba(255,215,0,.04);}
+.compare-row>div{
+  padding:20px 24px;display:flex;align-items:center;
+  font-size:14px;color:var(--text2);
+}
+.compare-row.head>div{
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:#fff;
+}
+.compare-row.head .col-brand{
+  background:linear-gradient(135deg,#FFD700,#FFA500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.col-feature{color:#fff;font-weight:500;}
+.col-val{font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.02em;}
+.col-val.yes{
+  color:var(--gold);
+  background:rgba(255,215,0,.04);
+  border-left:1px solid rgba(255,215,0,.2);
+}
+.col-val.no{color:var(--text3);}
+
+/* ============================================================
+   HOW IT WORKS — steps
+   ============================================================ */
+#how{background:var(--bg);}
+.steps{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:32px;counter-reset:step;
+}
+.step{
+  background:var(--bg3);border:1px solid var(--border);border-radius:20px;
+  padding:36px 32px;position:relative;counter-increment:step;transition:all .3s;
+}
+.step::before{
+  content:'0' counter(step);
+  position:absolute;top:24px;right:28px;
+  font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:1px;line-height:1;
+  background:linear-gradient(135deg,#FFD700,#FFA500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  opacity:.5;
+}
+.step:hover{border-color:rgba(255,215,0,.25);transform:translateY(-4px);}
+.step h4{
+  font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1.4px;
+  margin-bottom:14px;color:#fff;max-width:80%;
+}
+.step p{font-size:14px;color:var(--text2);line-height:1.7;}
+
+/* ============================================================
+   PRICING
+   ============================================================ */
+.pricing{background:var(--bg2);}
+.price-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.price-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:20px;
+  padding:44px 36px;position:relative;overflow:hidden;transition:all .3s;
+  display:flex;flex-direction:column;
+}
+.price-card:hover{border-color:rgba(255,215,0,.3);transform:translateY(-4px);}
+.price-card.featured{
+  border-color:rgba(255,215,0,.45);
+  background:linear-gradient(135deg,rgba(255,215,0,.08) 0%,var(--bg3) 60%);
+  box-shadow:0 20px 80px rgba(255,215,0,.1);
+}
+.price-card.featured::before{
+  content:'MOST POPULAR';position:absolute;top:24px;right:-30px;
+  background:var(--gold);color:#000;font-size:10px;font-weight:700;letter-spacing:.1em;
+  padding:5px 40px;transform:rotate(45deg) translateX(-10px);width:160px;text-align:center;
+  font-family:'DM Sans',sans-serif;
+}
+.price-badge{display:none;} /* badge replaced by ::before sticker */
+.price-name{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;
+  margin-bottom:6px;color:#fff;
+}
+.price-amount{
+  display:flex;align-items:flex-end;gap:4px;margin-bottom:8px;
+  font-family:'Bebas Neue',sans-serif;font-size:88px;letter-spacing:1px;line-height:.85;
+  background:linear-gradient(135deg,#FFD700,#FFA500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.price-amount .dollar{font-size:32px;margin-bottom:14px;line-height:1;}
+.price-period{
+  font-size:13px;color:var(--text3);letter-spacing:.04em;margin-bottom:14px;
+}
+.price-save{
+  display:inline-block;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;
+  color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);
+  padding:4px 10px;border-radius:4px;margin-bottom:24px;text-transform:uppercase;
+}
+.price-card ul{
+  list-style:none;display:flex;flex-direction:column;gap:11px;flex:1;margin-bottom:32px;
+}
+.price-card ul li{
+  font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;line-height:1.55;
+}
+.price-card ul li::before{
+  content:'✓';color:var(--green);font-weight:700;flex-shrink:0;font-size:14px;
+}
+.price-card .btn{width:100%;justify-content:center;}
+.price-foot{
+  margin-top:36px;font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--text3);line-height:1.7;text-align:center;
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.faq{background:var(--bg2);}
+.faq-list{margin-top:60px;display:flex;flex-direction:column;gap:12px;max-width:880px;}
+.faq details{
+  background:var(--bg3);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;transition:all .25s;
+}
+.faq details:hover{border-color:var(--border2);}
+.faq summary{
+  padding:22px 28px;cursor:pointer;list-style:none;display:flex;
+  justify-content:space-between;align-items:center;gap:20px;
+  font-size:15px;font-weight:600;color:#fff;
+}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{
+  content:'+';font-family:'Bebas Neue',sans-serif;font-size:24px;
+  color:var(--gold);transition:transform .25s;flex-shrink:0;
+}
+.faq details[open] summary::after{transform:rotate(45deg);}
+.faq details p{
+  padding:0 28px 24px;font-size:14px;color:var(--text2);line-height:1.75;
+}
+.faq details p a{color:var(--gold);}
+
+/* ============================================================
+   FINAL CTA
+   ============================================================ */
+.final-cta{
+  background:radial-gradient(ellipse at center,rgba(255,215,0,.08) 0%,transparent 60%),var(--bg);
+  text-align:center;padding:140px 60px;
+}
+.final-cta .section-inner{max-width:760px;text-align:center;}
+.final-cta h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(44px,6.5vw,92px);line-height:.95;letter-spacing:2px;margin-bottom:24px;
+}
+.final-cta h2 em{
+  font-style:normal;
+  background:linear-gradient(135deg,#FFD700 0%,#FF6400 50%,#FFD700 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmer 4s linear infinite;
+}
+.final-cta p{
+  font-size:17px;color:var(--text2);margin-bottom:40px;max-width:580px;
+  margin-left:auto;margin-right:auto;line-height:1.7;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{
+  background:var(--bg);border-top:1px solid var(--border);
+  padding:60px 60px 40px;
+}
+.foot-inner{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;
+  margin-bottom:48px;
+}
+.foot-brand{max-width:340px;}
+.foot-brand .nav-brand{margin-bottom:16px;}
+.foot-brand p{font-size:13px;color:var(--text3);line-height:1.7;}
+.foot-col h5{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:18px;font-weight:500;
+}
+.foot-col a{
+  display:block;color:var(--text2);font-size:13px;
+  margin-bottom:10px;transition:color .2s;
+}
+.foot-col a:hover{color:#fff;}
+.foot-bottom{
+  max-width:var(--max);margin:0 auto;padding-top:30px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;
+  letter-spacing:.04em;
+}
+.foot-disclaimer{
+  max-width:var(--max);margin:0 auto 24px;
+  padding:24px 28px;border-radius:12px;
+  background:rgba(255,255,255,.02);border:1px solid var(--border);
+}
+.foot-disclaimer h6{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:12px;font-weight:500;
+}
+.foot-disclaimer p{
+  font-size:11px;color:var(--text3);line-height:1.75;
+  font-family:'DM Sans',sans-serif;letter-spacing:.01em;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:980px){
+  nav.nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  section,.hero{padding-left:24px;padding-right:24px;}
+  section{padding-top:80px;padding-bottom:80px;}
+  .hero{padding-top:130px;padding-bottom:60px;}
+  .hero-inner{grid-template-columns:1fr;gap:48px;}
+  .hero-viz svg{max-width:480px;margin:0 auto;}
+  .problem-grid,.steps,.price-grid{grid-template-columns:1fr;}
+  .pillar{grid-template-columns:1fr !important;gap:48px;margin-bottom:80px;}
+  .pillar:nth-child(even) .pillar-text{order:0;}
+  .pillar:nth-child(even) .mockup{order:0;}
+  .proof{padding:22px 24px;}
+  .compare-row{grid-template-columns:1fr 1fr;}
+  .compare-row .col-feature{grid-column:1/-1;background:rgba(0,0,0,.2);padding:14px 24px;font-weight:700;}
+  .compare-row.head .col-feature{display:none;}
+  .compare-row.head{grid-template-columns:repeat(3,1fr);}
+  .foot-inner{grid-template-columns:1fr 1fr;}
+  .foot-bottom{flex-direction:column;gap:12px;text-align:center;}
+  .price-card.featured::before{font-size:9px;padding:4px 32px;width:140px;}
+  .bridge{padding:32px 24px;}
+  .final-cta{padding:90px 24px;}
+  footer{padding:50px 24px 30px;}
+}
+@media (max-width:560px){
+  .mock-stats{grid-template-columns:1fr;}
+  .hero-meta{gap:14px;flex-direction:column;}
+  .price-amount{font-size:72px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Cursor glow follows mouse -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- NAV                                                              -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-mark">
+      <div class="c c1"></div>
+      <div class="c c2"></div>
+      <div class="lens"></div>
+    </div>
+    <div>
+      <div class="nav-wordmark">LIMITLESS</div>
+      <div class="nav-tag">T R A D E &nbsp; C O P I E R</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#pricing" class="nav-cta">Get Limitless</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- HERO                                                             -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">
+        <span class="dot"></span> Built for traders running multiple accounts
+      </div>
+      <h1>
+        A TOOL
+        <em>EVERY TRADER</em>
+        SHOULD HAVE.
+      </h1>
+      <p class="hero-sub">
+        Limitless mirrors trades across <strong>any MT5 broker</strong> in milliseconds, with a prop-firm-aware journal and per-account safety rules built in. <strong>Run any number of accounts</strong> from one master — whether you trade live, demo, or funded.
+      </p>
+      <div class="hero-ctas">
+        <a href="#pricing" class="btn btn-primary btn-lg">
+          Start trading copies — $50
+          <span>→</span>
+        </a>
+        <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
+      </div>
+      <div class="hero-meta">
+        <span><span class="tick">✓</span> <strong>Unlimited accounts</strong> on every plan</span>
+        <span><span class="tick">✓</span> <strong>Windows 10/11</strong> · MT5 native</span>
+        <span><span class="tick">✓</span> <strong>14-day refund</strong> on monthly</span>
+      </div>
+    </div>
+
+    <!-- HERO ANIMATION — 3 rotating splashes: Copier / Journal / Protector -->
+    <div class="hero-viz" id="heroViz" aria-hidden="true">
+      <div class="splash-frame">
+
+        <!-- SPLASH 1: COPIER -->
+        <div class="splash splash-active" data-splash="0">
+          <div class="splash-tag"><span class="splash-tag-num">01</span> COPIER</div>
+          <svg viewBox="0 0 520 440" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="masterGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="rgba(255,215,0,0.22)"/>
+                <stop offset="100%" stop-color="rgba(255,165,0,0.06)"/>
+              </linearGradient>
+            </defs>
+            <!-- Master -->
+            <rect x="40" y="170" width="180" height="80" rx="10" fill="url(#masterGrad)" stroke="rgba(255,215,0,0.4)"/>
+            <text x="56" y="194" class="vl">MASTER · ICMARKETS</text>
+            <text x="56" y="220" class="vb">$50,432.10</text>
+            <text x="56" y="238" class="vl vbr">EA · LIVE</text>
+            <circle cx="200" cy="186" r="3" fill="#FFD700"/>
+
+            <!-- Flow paths -->
+            <path d="M 220 200 Q 290 200 360 90"  class="vf"/>
+            <path d="M 220 200 Q 290 200 360 190" class="vf"/>
+            <path d="M 220 200 Q 290 200 360 290" class="vf"/>
+            <path d="M 220 200 Q 290 200 360 380" class="vf"/>
+
+            <!-- Slaves -->
+            <rect x="360" y="60"  width="140" height="60" rx="8" class="vn"/>
+            <text x="372" y="82"  class="vl">FTMO · CHALLENGE</text>
+            <text x="372" y="106" class="vb sm">$99,820</text>
+
+            <rect x="360" y="160" width="140" height="60" rx="8" class="vn"/>
+            <text x="372" y="182" class="vl">MFF · FUNDED</text>
+            <text x="372" y="206" class="vb sm">$201,450</text>
+
+            <rect x="360" y="260" width="140" height="60" rx="8" class="vn"/>
+            <text x="372" y="282" class="vl">FUNDEDNEXT · EVAL</text>
+            <text x="372" y="306" class="vb sm">$24,890</text>
+
+            <rect x="360" y="350" width="140" height="60" rx="8" class="vn"/>
+            <text x="372" y="372" class="vl">E8 · FUNDED</text>
+            <text x="372" y="396" class="vb sm">$48,120</text>
+
+            <!-- Animated pulses on paths -->
+            <circle r="4" fill="#FFD700" class="pf pf-a"/>
+            <circle r="4" fill="#FFD700" class="pf pf-b"/>
+            <circle r="4" fill="#FFD700" class="pf pf-c"/>
+            <circle r="4" fill="#FFD700" class="pf pf-d"/>
+
+            <text x="100" y="280" class="vl sub">SUB-100MS COPY LATENCY</text>
+          </svg>
+        </div>
+
+        <!-- SPLASH 2: JOURNAL -->
+        <div class="splash" data-splash="1">
+          <div class="splash-tag"><span class="splash-tag-num">02</span> JOURNAL</div>
+          <svg viewBox="0 0 520 440" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFD700"/>
+                <stop offset="100%" stop-color="#FFA500"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Account title -->
+            <text x="40" y="46" class="vl big">FTMO 100K · CHALLENGE</text>
+            <text x="40" y="70" class="vl sub">DAY 7 OF 30 · ON TRACK</text>
+
+            <!-- Profit target ring -->
+            <g transform="translate(140 220)">
+              <circle r="78" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14"/>
+              <circle r="78" fill="none" stroke="url(#ringGrad)" stroke-width="14"
+                      stroke-dasharray="490" stroke-dashoffset="490"
+                      class="ring-anim" transform="rotate(-90)" stroke-linecap="round"/>
+              <text x="0" y="-6" class="vb huge" text-anchor="middle">68%</text>
+              <text x="0" y="18" class="vl sub" text-anchor="middle">PROFIT TARGET</text>
+            </g>
+
+            <!-- Stat tiles -->
+            <g transform="translate(260 110)">
+              <rect width="220" height="64" rx="10" class="tile"/>
+              <text x="16" y="26" class="vl sub">DAILY LOSS USED</text>
+              <text x="16" y="52" class="vb gold">1.2%</text>
+              <rect x="120" y="40" width="84" height="6" rx="3" fill="rgba(255,255,255,0.06)"/>
+              <rect x="120" y="40" width="20" height="6" rx="3" fill="#FFD700" class="dl-fill"/>
+            </g>
+            <g transform="translate(260 188)">
+              <rect width="220" height="64" rx="10" class="tile"/>
+              <text x="16" y="26" class="vl sub">CURRENT P&amp;L</text>
+              <text x="16" y="52" class="vb green">+$6,820</text>
+            </g>
+            <g transform="translate(260 266)">
+              <rect width="220" height="64" rx="10" class="tile"/>
+              <text x="16" y="26" class="vl sub">DAYS TRADED</text>
+              <text x="16" y="52" class="vb">7 / 10</text>
+            </g>
+
+            <!-- Heatmap -->
+            <g transform="translate(40 340)">
+              <text x="0" y="0" class="vl sub">LAST 14 DAYS</text>
+              <g class="hm">
+                <rect x="0"   y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="0.4"/>
+                <rect x="26"  y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="0.8"/>
+                <rect x="52"  y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="0.6"/>
+                <rect x="78"  y="14" width="20" height="20" rx="3" fill="#EF4444" opacity="0.5"/>
+                <rect x="104" y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="0.9"/>
+                <rect x="130" y="14" width="20" height="20" rx="3" fill="rgba(255,255,255,0.05)"/>
+                <rect x="156" y="14" width="20" height="20" rx="3" fill="rgba(255,255,255,0.05)"/>
+                <rect x="182" y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="0.7"/>
+                <rect x="208" y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="1"/>
+                <rect x="234" y="14" width="20" height="20" rx="3" fill="#EF4444" opacity="0.3"/>
+                <rect x="260" y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="0.8"/>
+                <rect x="286" y="14" width="20" height="20" rx="3" fill="#22C55E" opacity="0.5"/>
+                <rect x="312" y="14" width="20" height="20" rx="3" fill="rgba(255,255,255,0.05)"/>
+                <rect x="338" y="14" width="20" height="20" rx="3" fill="rgba(255,255,255,0.05)"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <!-- SPLASH 3: PROTECTOR -->
+        <div class="splash" data-splash="2">
+          <div class="splash-tag"><span class="splash-tag-num">03</span> PROTECTOR</div>
+          <svg viewBox="0 0 520 440" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- Account row being protected -->
+            <text x="40" y="46" class="vl big">FTMO #1142823</text>
+            <text x="40" y="70" class="vl sub">DAILY LOSS GUARD · 4.0% THRESHOLD</text>
+
+            <!-- Loss meter -->
+            <rect x="40" y="100" width="440" height="42" rx="10" class="tile"/>
+            <rect x="48" y="116" width="424" height="10" rx="5" fill="rgba(239,68,68,0.12)"/>
+            <rect x="48" y="116" width="0"   height="10" rx="5" fill="#EF4444" class="loss-fill"/>
+            <text x="48"  y="138" class="vl sub">0%</text>
+            <text x="455" y="138" class="vl sub gold">4.0%</text>
+
+            <!-- Shield + pause stamp -->
+            <g class="shield-pop" transform="translate(260 240)">
+              <circle r="60" fill="rgba(34,197,94,0.10)"/>
+              <circle r="48" fill="rgba(34,197,94,0.18)"/>
+              <circle r="38" fill="rgba(34,197,94,0.28)"/>
+              <path d="M 0 -22 L -16 -12 L -16 6 Q -16 22 0 30 Q 16 22 16 6 L 16 -12 Z"
+                    fill="#22C55E"/>
+              <path d="M -7 2 L -2 7 L 8 -5" fill="none" stroke="#030508" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <text x="260" y="320" class="vb green" text-anchor="middle">PROTECTED</text>
+            <text x="260" y="342" class="vl sub" text-anchor="middle">AUTO-PAUSED · RESUMES MIDNIGHT</text>
+
+            <!-- Alert lines -->
+            <g class="alert-row" transform="translate(40 370)">
+              <rect width="440" height="22" rx="6" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.25)"/>
+              <circle cx="14" cy="11" r="4" fill="#22D3EE"/>
+              <text x="28" y="15" class="vl">PRE-TRADE BLOCK · 2.0 LOT REJECTED · BUFFER PROTECTED</text>
+            </g>
+            <g class="alert-row" transform="translate(40 400)" style="animation-delay:.6s">
+              <rect width="440" height="22" rx="6" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.25)"/>
+              <circle cx="14" cy="11" r="4" fill="#22C55E"/>
+              <text x="28" y="15" class="vl">FUNDEDNEXT · TARGET MET · WITHDRAWAL READY</text>
+            </g>
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- Tab indicator -->
+      <div class="splash-tabs">
+        <button class="splash-tab is-active" data-tab="0" type="button">
+          <span class="dot"></span><span class="label">COPIER</span>
+        </button>
+        <button class="splash-tab" data-tab="1" type="button">
+          <span class="dot"></span><span class="label">JOURNAL</span>
+        </button>
+        <button class="splash-tab" data-tab="2" type="button">
+          <span class="dot"></span><span class="label">PROTECTOR</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SOCIAL PROOF                                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="proof">
+  <div class="proof-inner">
+    <span class="proof-label">Works with</span>
+    <div class="proof-firms">
+      <span>EXNESS</span>
+      <span>IC MARKETS</span>
+      <span>PEPPERSTONE</span>
+      <span>FTMO</span>
+      <span>MYFOREXFUNDS</span>
+      <span>FUNDEDNEXT</span>
+      <span>+ ANY MT5 BROKER</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PROBLEM                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="problem" id="problem">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">The prop firm problem</div>
+      <h2>Manual copying is how funded accounts <em>die.</em></h2>
+      <p>The trader who passes 5 challenges in a month doesn't out-trade everyone. They out-execute everyone. Manual copying breaks down at exactly the moment the stakes get serious.</p>
+    </div>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="icon">⌛</div>
+        <h3>Seconds matter</h3>
+        <p>By the time you finish placing the same trade on your 4th account, the spread has moved. Slippage compounds. Your portfolio doesn't actually copy — it scatters.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">!</div>
+        <h3>One mistake. Everything gone.</h3>
+        <p>Forget to size down on the smaller challenge account. Hit your daily loss in 3 minutes. Funded account terminated. You can't undo it. No support email saves you.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">∑</div>
+        <h3>Rules vary per firm</h3>
+        <p>FTMO daily loss is 5%. FundedNext is 5% but on equity. MFF is 4%. Each account needs different rules tracked separately. Spreadsheets break under live fire.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- BRIDGE                                                           -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="bridge">
+  <div class="bridge-line">
+    <span>COPIER</span>
+    <span class="plus">+</span>
+    <span>JOURNAL</span>
+    <span class="plus">+</span>
+    <span>PROTECTOR</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PILLARS                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="features" class="pillars">
+  <div class="section-inner">
+
+    <!-- PILLAR 1: COPIER -->
+    <article class="pillar">
+      <div class="pillar-text">
+        <div class="pillar-number">01 · Copier</div>
+        <h3>Mirror every trade in <em>milliseconds.</em></h3>
+        <p>Limitless connects to MT5 natively — no EAs, no DLL injection, no signal subscriptions. When your master enters a position, every connected account opens its own trade in under 100ms. Stop-loss, take-profit, partial closes, trailing stops — all copied identically.</p>
+        <ul class="pillar-list">
+          <li>Unlimited master + slave accounts on every plan</li>
+          <li>Per-account lot sizing: fixed, percentage of balance, or risk-based</li>
+          <li>Reverse mode: mirror the opposite side onto a personal account for portfolio hedging</li>
+          <li>Symbol mapping handles broker suffixes automatically (XAUUSD ↔ XAUUSDm)</li>
+          <li>Works across brokers — Exness master, IC Markets slave, FTMO slave, all at once</li>
+        </ul>
+      </div>
+      <div class="mockup">
+        <div class="mockup-window">
+          <div class="mockup-titlebar">
+            <span class="mockup-dot r"></span>
+            <span class="mockup-dot y"></span>
+            <span class="mockup-dot g"></span>
+            <span class="mockup-title">Limitless · Copier</span>
+          </div>
+          <div class="mockup-body">
+            <div class="mock-row">
+              <span class="name">ICMarkets · 260705185</span>
+              <span class="balance">$50,432.10</span>
+              <span class="tag tag-master">MASTER</span>
+            </div>
+            <div class="mock-row">
+              <span class="name">FTMO · 1142823</span>
+              <span class="balance">$99,820.50</span>
+              <span class="tag tag-slave">COPYING · 1.0×</span>
+            </div>
+            <div class="mock-row">
+              <span class="name">MyForexFunds · 88241</span>
+              <span class="balance">$201,450.20</span>
+              <span class="tag tag-slave">COPYING · 2.0×</span>
+            </div>
+            <div class="mock-row">
+              <span class="name">FundedNext · 401829</span>
+              <span class="balance">$24,890.00</span>
+              <span class="tag tag-slave">COPYING · 0.5×</span>
+            </div>
+            <div class="mock-row">
+              <span class="name">E8 Funding · 9182</span>
+              <span class="balance">$48,120.75</span>
+              <span class="tag tag-paused">PAUSED · DD HIT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PILLAR 2: JOURNAL -->
+    <article class="pillar">
+      <div class="pillar-text">
+        <div class="pillar-number">02 · Journal</div>
+        <h3>A prop firm journal that <em>understands</em> prop firms.</h3>
+        <p>Generic trade journals don't know what "daily loss limit" means. Limitless does. Every trade is automatically logged per account, with running P&L tracked against the specific rules of whichever prop firm that account belongs to. Daily loss, max drawdown, profit target, minimum trading days — all calculated for you in real time.</p>
+        <ul class="pillar-list">
+          <li>Auto-tags trades by account, firm, and challenge stage</li>
+          <li>Real-time progress toward profit target with days-remaining estimate</li>
+          <li>Daily P&L heatmap — spot the days you should've stayed in bed</li>
+          <li>Per-symbol stats: which pairs make you money, which lose it</li>
+          <li>Export to CSV for tax reporting or external journaling</li>
+        </ul>
+      </div>
+      <div class="mockup">
+        <div class="mockup-window">
+          <div class="mockup-titlebar">
+            <span class="mockup-dot r"></span>
+            <span class="mockup-dot y"></span>
+            <span class="mockup-dot g"></span>
+            <span class="mockup-title">Limitless · Journal · FTMO 100K</span>
+          </div>
+          <div class="mockup-body">
+            <div class="mock-stats">
+              <div class="mock-stat">
+                <div class="mock-stat-label">Profit target</div>
+                <div class="mock-stat-value ok">68%</div>
+              </div>
+              <div class="mock-stat">
+                <div class="mock-stat-label">Daily loss used</div>
+                <div class="mock-stat-value brand">1.2%</div>
+              </div>
+              <div class="mock-stat">
+                <div class="mock-stat-label">Days traded</div>
+                <div class="mock-stat-value">7 / 10</div>
+              </div>
+            </div>
+            <div class="mock-bar"><div class="mock-bar-fill" style="width:68%"></div></div>
+            <div style="margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);display:flex;justify-content:space-between;">
+              <span>$0</span><span style="color:var(--gold)">+ $6,820 of $10,000</span><span>$10,000</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(14,1fr);gap:3px;margin-top:18px;">
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:.4"></div>
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:.8"></div>
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:.6"></div>
+              <div style="aspect-ratio:1;background:var(--red);border-radius:2px;opacity:.5"></div>
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:.9"></div>
+              <div style="aspect-ratio:1;background:var(--bg4);border-radius:2px"></div>
+              <div style="aspect-ratio:1;background:var(--bg4);border-radius:2px"></div>
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:.7"></div>
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:1"></div>
+              <div style="aspect-ratio:1;background:var(--red);border-radius:2px;opacity:.3"></div>
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:.8"></div>
+              <div style="aspect-ratio:1;background:var(--green);border-radius:2px;opacity:.5"></div>
+              <div style="aspect-ratio:1;background:var(--bg4);border-radius:2px"></div>
+              <div style="aspect-ratio:1;background:var(--bg4);border-radius:2px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PILLAR 3: PROTECTOR -->
+    <article class="pillar">
+      <div class="pillar-text">
+        <div class="pillar-number">03 · Protector</div>
+        <h3>The line you set is the line we hold. <em>Automatically.</em></h3>
+        <p>You set a soft limit (say, 60% of FTMO's 5% daily loss). The moment that account approaches it, Limitless auto-pauses copying for that one account while every other account keeps trading. No emotion, no hesitation, no "one more trade" — the rule executes before your brain catches up.</p>
+        <ul class="pillar-list">
+          <li>Soft pauses per account when daily loss / drawdown thresholds hit</li>
+          <li>Hard stops with auto-close all positions option for emergency</li>
+          <li>Pre-trade rejection: blocks trades that would breach the limit before they place</li>
+          <li>Per-account profit targets — auto-pause once a goal is reached so you don't give it back</li>
+          <li>Resumes automatically at midnight broker time (configurable)</li>
+        </ul>
+      </div>
+      <div class="mockup">
+        <div class="mockup-window">
+          <div class="mockup-titlebar">
+            <span class="mockup-dot r"></span>
+            <span class="mockup-dot y"></span>
+            <span class="mockup-dot g"></span>
+            <span class="mockup-title">Limitless · Protector · Activity</span>
+          </div>
+          <div class="mockup-body">
+            <div class="mock-alert">
+              <div class="mock-alert-icon">!</div>
+              <div class="mock-alert-text">
+                <strong>FTMO #1142823 — paused at 4.1% daily loss</strong>
+                Threshold: 4.0% (80% of firm limit). 3 pending copies skipped. Resumes at midnight broker time.
+              </div>
+            </div>
+            <div class="mock-alert" style="background:rgba(34,211,238,.06);border-color:rgba(34,211,238,.3);">
+              <div class="mock-alert-icon" style="background:var(--cyan)">i</div>
+              <div class="mock-alert-text">
+                <strong>Pre-trade block — MFF #88241</strong>
+                Proposed 2.0 lot on XAUUSD would breach 4% daily loss buffer. Trade rejected before placement.
+              </div>
+            </div>
+            <div class="mock-alert" style="background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.3);">
+              <div class="mock-alert-icon" style="background:var(--green)">✓</div>
+              <div class="mock-alert-text">
+                <strong>FundedNext #401829 — profit target met</strong>
+                Auto-paused. Withdrawal request reminder set for Monday.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- COMPARISON                                                       -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="compare">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">Compared to</div>
+      <h2>What other copiers <em>don't</em> do.</h2>
+      <p>Most MT5 copiers were built for signal sellers, not prop firm traders. Here's what's actually different.</p>
+    </div>
+    <div class="compare-table">
+      <div class="compare-row head">
+        <div>Feature</div>
+        <div class="col-brand">Limitless</div>
+        <div>Generic MT5 Copier</div>
+        <div>Trader Spreadsheets</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-feature">Copy speed</div>
+        <div class="col-val yes">&lt; 100ms</div>
+        <div class="col-val">~500ms</div>
+        <div class="col-val no">human</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-feature">Prop firm rule tracking</div>
+        <div class="col-val yes">Built-in</div>
+        <div class="col-val no">No</div>
+        <div class="col-val">Manual</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-feature">Per-account daily loss guards</div>
+        <div class="col-val yes">Yes</div>
+        <div class="col-val no">No</div>
+        <div class="col-val no">No</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-feature">Trade journaling</div>
+        <div class="col-val yes">Yes</div>
+        <div class="col-val no">No</div>
+        <div class="col-val">Manual</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-feature">Pre-trade rule check</div>
+        <div class="col-val yes">Yes</div>
+        <div class="col-val no">No</div>
+        <div class="col-val no">No</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-feature">Works across brokers</div>
+        <div class="col-val yes">Yes</div>
+        <div class="col-val">Some</div>
+        <div class="col-val">N/A</div>
+      </div>
+      <div class="compare-row">
+        <div class="col-feature">Per-account fee</div>
+        <div class="col-val yes">None</div>
+        <div class="col-val">$10–30 each</div>
+        <div class="col-val">Free + sanity loss</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- HOW IT WORKS                                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">How it works</div>
+      <h2>Up and running in <em>under 10 minutes.</em></h2>
+      <p>You don't need to install custom EAs, change broker settings, or configure VPS hardware. Limitless runs on your Windows PC and talks to MT5 the same way you do.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <h4>Connect your accounts</h4>
+        <p>Add each MT5 account — master and slaves — using the same login + investor password you already use. One window per account. No EAs to import.</p>
+      </div>
+      <div class="step">
+        <h4>Set the rules per account</h4>
+        <p>Pick which prop firm each slave belongs to. Limitless pre-fills the firm's known limits (daily loss, max DD, profit target). Override anything you want.</p>
+      </div>
+      <div class="step">
+        <h4>Trade your master normally</h4>
+        <p>Every trade — manual, EA, or copy-trade subscription — mirrors instantly to every connected account, with each one's safety rules running in the background.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PRICING                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="pricing" id="pricing">
+  <div class="section-inner">
+    <div class="section-head center">
+      <div class="section-eyebrow">Pricing</div>
+      <h2>One product. Three plans. <em>No per-account fees.</em></h2>
+      <p>Every plan includes everything — copier, journal, protector, unlimited accounts, all updates. The only difference is the billing cycle.</p>
+    </div>
+
+    <div class="price-grid">
+
+      <div class="price-card">
+        <div class="price-name">1 MONTH</div>
+        <div class="price-amount"><span class="dollar">$</span>50</div>
+        <div class="price-period">per month · cancel anytime</div>
+        <ul>
+          <li>Unlimited master + slave accounts</li>
+          <li>Full prop firm journal</li>
+          <li>All safety guards (daily loss, drawdown, profit target)</li>
+          <li>Email support · 24h reply</li>
+          <li>14-day refund window</li>
+        </ul>
+        <a href="https://buy.stripe.com/REPLACE_1MONTH" class="btn btn-ghost">Start 1 month</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-name">3 MONTHS</div>
+        <div class="price-amount"><span class="dollar">$</span>120</div>
+        <div class="price-period">$40 / month equivalent</div>
+        <div class="price-save">Save 20%</div>
+        <ul>
+          <li>Everything in 1 Month</li>
+          <li>Priority support · 8h reply</li>
+          <li>Free hardware migration</li>
+          <li>Beta access to new features</li>
+          <li>14-day refund window</li>
+        </ul>
+        <a href="https://buy.stripe.com/REPLACE_3MONTH" class="btn btn-primary">Get 3 months</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-name">YEARLY</div>
+        <div class="price-amount"><span class="dollar">$</span>300</div>
+        <div class="price-period">$25 / month equivalent</div>
+        <div class="price-save">Save 50%</div>
+        <ul>
+          <li>Everything in 3 Months</li>
+          <li>1-on-1 setup call (30 min)</li>
+          <li>Direct line to product team</li>
+          <li>Lock in price for 12 months</li>
+          <li>Non-refundable after activation</li>
+        </ul>
+        <a href="https://buy.stripe.com/REPLACE_YEARLY" class="btn btn-ghost">Lock in yearly</a>
+      </div>
+    </div>
+
+    <p class="price-foot">All prices in USD. Pay via <strong>Stripe</strong> (Visa, Mastercard, Amex), <strong>local bank transfer</strong>, or <strong>crypto</strong> (BTC, USDT, ETH).<br>License binds to your hardware on activation; contact support to migrate to a new PC.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FAQ                                                              -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">FAQ</div>
+      <h2>The honest answers to <em>the questions</em> you came here with.</h2>
+    </div>
+
+    <div class="faq-list">
+      <details>
+        <summary>Does Limitless work with my prop firm?</summary>
+        <p>Limitless works with any prop firm that gives you MT5 login credentials — which is to say, virtually all of them. We've tested specifically with FTMO, MyForexFunds, FundedNext, The Funded Trader, E8 Funding, FundedNext, and Topstep FX. Connect each account once; the copier handles the rest.</p>
+      </details>
+      <details>
+        <summary>Will my prop firm detect that I'm using a copier?</summary>
+        <p>Limitless runs locally on your PC and connects to MT5 the same way the platform's own desktop client does. It doesn't inject custom EAs into your terminal, doesn't modify the trading platform, and doesn't connect to any third-party signal server. From the prop firm's audit logs, you're placing trades manually from your own machine. That said: always read your specific prop firm's terms — some firms restrict copy trading between funded accounts (different from copying from your own master, which is normal).</p>
+      </details>
+      <details>
+        <summary>What happens if I hit my daily loss limit?</summary>
+        <p>Limitless auto-pauses copying to that specific account the moment you cross a threshold you set — typically 60-80% of the firm's actual daily limit, leaving you a buffer. Every other account keeps trading normally. You can configure separate thresholds per account, plus a hard "close all" emergency switch.</p>
+      </details>
+      <details>
+        <summary>Can I move my license to a new PC?</summary>
+        <p>Yes. Each license is bound to a hardware fingerprint, but moving is straightforward: email <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a> from the address on your license, and we release the binding within 24 hours so you can activate on the new machine. There's no per-move fee.</p>
+      </details>
+      <details>
+        <summary>Do I need to keep my PC running all the time?</summary>
+        <p>Yes — Limitless runs locally and needs to be open for trades to copy. Most users run it on a Windows VPS (~$10/month from Vultr, Contabo, or BeeksFX) so it stays online 24/7. We have a 5-minute setup guide for VPS configuration in the docs.</p>
+      </details>
+      <details>
+        <summary>Do you offer a refund?</summary>
+        <p>14-day refund window on the 1-month and 3-month plans, no questions asked. The yearly plan is non-refundable after activation but you can cancel future renewals at any time and keep your license active until the end of the paid period.</p>
+      </details>
+      <details>
+        <summary>How is this different from a "signal copier"?</summary>
+        <p>Signal copiers (Telegram bots, MQL5 signals, etc.) copy trades from someone else's master account to yours, usually with seconds of delay and zero context about your account rules. Limitless copies from <em>your own</em> master to <em>your other</em> accounts — instantly, locally, with per-account risk awareness. It's a tool for managing your portfolio, not subscribing to someone else's.</p>
+      </details>
+      <details>
+        <summary>What if I trade something other than forex — gold, indices, crypto CFDs?</summary>
+        <p>Any instrument tradable on MT5 is supported: forex, metals, indices, oil, crypto CFDs, stocks (where the broker offers them). The copier doesn't care what the symbol is — it just mirrors what the master does.</p>
+      </details>
+      <details>
+        <summary>Is there a free trial?</summary>
+        <p>The 1-month plan at $50 with a 14-day refund acts as a no-risk trial — try it for two weeks, refund if it's not for you. We chose this over a "free trial" because activation is hardware-bound and we wanted the simplest commitment up front rather than dark patterns around trial expiry.</p>
+      </details>
+      <details>
+        <summary>Who's behind this?</summary>
+        <p>Limitless is built by a small team of prop firm traders who got tired of managing 6 challenge accounts with stopwatches and spreadsheets. We dogfood every feature on our own accounts before shipping it. Contact: <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FINAL CTA                                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="final-cta">
+  <div class="section-inner">
+    <h2>THE NEXT FUNDED ACCOUNT<br>WON'T <em>SAVE ITSELF.</em></h2>
+    <p>Stop copying trades with your fingers. Stop tracking rules in spreadsheets. Stop watching weeks of work disappear at 9:32 AM because of one missed lot size.</p>
+    <div class="hero-ctas" style="justify-content:center;">
+      <a href="#pricing" class="btn btn-primary btn-lg">
+        Get Limitless — $50
+        <span>→</span>
+      </a>
+      <a href="#faq" class="btn btn-ghost btn-lg">Read the FAQ first</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FOOTER                                                           -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <div class="nav-brand">
+        <div class="nav-mark">
+          <div class="c c1"></div>
+          <div class="c c2"></div>
+          <div class="lens"></div>
+        </div>
+        <div>
+          <div class="nav-wordmark">LIMITLESS</div>
+          <div class="nav-tag">T R A D E &nbsp; C O P I E R</div>
+        </div>
+      </div>
+      <p>The MT5 trade copier with a built-in prop firm journal and per-account risk protection. Works with any MT5 broker. Built by traders, for traders.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Product</h5>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="foot-col">
+      <h5>Resources</h5>
+      <a href="/docs">Documentation</a>
+      <a href="/changelog">Changelog</a>
+      <a href="/blog">Blog</a>
+      <a href="/status">System status</a>
+    </div>
+    <div class="foot-col">
+      <h5>Company</h5>
+      <a href="mailto:support@limitlesscopier.com">Contact</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/refund">Refund Policy</a>
+    </div>
+  </div>
+  <div class="foot-disclaimer">
+    <h6>Risk Disclosure</h6>
+    <p>Trading foreign exchange, contracts for difference (CFDs), and other leveraged financial instruments carries a high level of risk and may result in the loss of all your invested capital. Past performance is not indicative of future results. Limitless is a trade copying and journaling utility — it does not provide trading signals, financial advice, or investment recommendations of any kind, and is not a broker, dealer, or registered investment advisor. You alone are responsible for every trade placed on your accounts, including trades replicated by the software. Limitless and its operators accept no liability for losses, missed trades, account terminations, prop-firm rule breaches, or any other damages arising from use of the software. By using Limitless, you confirm that you understand the risks of trading and that copy-trading or third-party tooling may be restricted under the terms of certain brokers or proprietary trading firms — it is your responsibility to verify that your use of this software complies with the rules of every account you connect to it.</p>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 LIMITLESS · ALL RIGHTS RESERVED</span>
+    <span>SUPPORT@LIMITLESSCOPIER.COM</span>
+  </div>
+</footer>
+
+<script>
+// Hero splash carousel — auto-cycle Copier / Journal / Protector
+// 5s per splash, pauses on hover, click tabs to jump.
+(function(){
+  const viz = document.getElementById('heroViz');
+  if (!viz) return;
+  const splashes = viz.querySelectorAll('.splash');
+  const tabs = viz.querySelectorAll('.splash-tab');
+  if (!splashes.length) return;
+
+  const DURATION = 5000;
+  let idx = 0;
+  let timer = null;
+  let paused = false;
+
+  function show(n){
+    idx = (n + splashes.length) % splashes.length;
+    splashes.forEach((s, i) => s.classList.toggle('splash-active', i === idx));
+    tabs.forEach((t, i) => t.classList.toggle('is-active', i === idx));
+  }
+
+  function tick(){
+    if (paused) return;
+    show(idx + 1);
+  }
+
+  function start(){
+    stop();
+    timer = setInterval(tick, DURATION);
+  }
+  function stop(){
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => {
+      show(i);
+      start(); // reset timer on manual click
+    });
+  });
+
+  viz.addEventListener('mouseenter', () => { paused = true; });
+  viz.addEventListener('mouseleave', () => { paused = false; });
+
+  // Respect reduced-motion — show first splash, no auto-cycle
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    show(0);
+    return;
+  }
+
+  start();
+})();
+
+
+// Cursor glow follows the pointer. Disabled on touch devices.
+(function(){
+  const glow = document.getElementById('cursorGlow');
+  if (!glow) return;
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    glow.style.display = 'none';
+    return;
+  }
+  let raf = null;
+  let tx = window.innerWidth/2, ty = window.innerHeight/2;
+  document.addEventListener('mousemove', (e) => {
+    tx = e.clientX; ty = e.clientY;
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      glow.style.left = tx + 'px';
+      glow.style.top  = ty + 'px';
+      raf = null;
+    });
+  });
+})();
+</script>
+</body>
+</html>
