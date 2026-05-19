@@ -1,485 +1,695 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- FONT-PRECONNECT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Checkout — Limitless Trade Copier</title>
-<meta name="description" content="Complete your purchase of Limitless Trade Copier. Pay with USDT (TRC20) for instant license delivery.">
+<meta name="description" content="Complete your Limitless Trade Copier purchase. Pay with USDT (TRC20) or bank transfer (PK/UAE).">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#030508">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Same font stack as index.html: Bebas Neue (display), DM Sans (body), DM Mono (labels + numerics) -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
+/* =============================================================
+   Design tokens — IDENTICAL to index.html so the two pages
+   feel like the same product.
+   ============================================================= */
 :root {
-  --bg-void: #050507;
-  --bg-base: #0A0A0C;
-  --bg-panel: #111114;
-  --bg-raised: #16161A;
-  --border-faint: #1A1A1D;
-  --border-default: #2A2A30;
-  --border-strong: #3A3A42;
-  --text-primary: #F5F5F7;
-  --text-secondary: #C0C0C5;
-  --text-muted: #88888F;
-  --text-faint: #5A5A60;
-  --brand: #FF9F1C;
-  --brand-glow: #FFB347;
-  --brand-tint: rgba(255, 159, 28, 0.08);
-  --accent: #22D3EE;
-  --ok: #10B981;
-  --err: #F43F5E;
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-ui: 'Geist', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --gold: #FFD700;
+  --gold2: #FFA500;
+  --green: #22C55E;
+  --red:   #EF4444;
+  --cyan:  #22D3EE;
+
+  --bg:   #030508;
+  --bg2:  #080d15;
+  --bg3:  #0d1525;
+  --bg4:  #121b2e;
+
+  --text:  #fff;
+  --text2: rgba(255,255,255,.65);
+  --text3: rgba(255,255,255,.40);
+  --text4: rgba(255,255,255,.20);
+
+  --border:  rgba(255,255,255,.08);
+  --border2: rgba(255,255,255,.14);
+  --gold-glow: rgba(255,215,0,.25);
+
+  --max: 1200px;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: var(--font-ui);
-  background: var(--bg-base);
-  color: var(--text-primary);
-  min-height: 100vh;
-  line-height: 1.55;
-  font-size: 16px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.55;
 }
 a { color: inherit; text-decoration: none; }
+img, svg { max-width: 100%; display: block; }
 
-.nav { padding: 18px 24px; border-bottom: 1px solid var(--border-faint); }
-.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
-.brand {
-  font-family: var(--font-display); font-weight: 600; font-size: 20px;
-  letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
+/* =============================================================
+   NAV — identical structure to index.html
+   ============================================================= */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(3,5,8,.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
 }
-.brand-mark { width: 28px; height: 18px; position: relative; }
-.brand-mark::before, .brand-mark::after {
-  content: ''; position: absolute; width: 12px; height: 12px;
-  border-radius: 50%; top: 3px;
+.nav-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 18px 32px;
+  display: flex; align-items: center; gap: 32px;
 }
-.brand-mark::before { left: 0; background: var(--accent); }
-.brand-mark::after { right: 0; background: var(--brand); }
-.brand-bar {
-  position: absolute; left: 50%; top: 2px; transform: translateX(-50%);
-  width: 4px; height: 14px; background: var(--brand); border-radius: 2px;
+.nav-brand { display: flex; align-items: center; gap: 14px; }
+.nav-mark { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+.nav-mark .c { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; transform: translateY(-50%); }
+.nav-mark .c1 { left: 0; background: var(--green); }
+.nav-mark .c2 { right: 0; background: var(--red); }
+.nav-mark .lens {
+  position: absolute; top: 50%; left: 50%;
+  width: 6px; height: 18px;
+  background: var(--gold); border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
-.back-link {
-  margin-left: auto; color: var(--text-muted); font-size: 14px;
+.nav-wordmark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px; color: #fff; line-height: 1;
 }
-.back-link:hover { color: var(--text-primary); }
+.nav-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: .15em; color: var(--gold);
+  margin-top: 2px;
+}
+.nav-back {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: .12em;
+  color: var(--text3); text-transform: uppercase;
+  transition: color .2s;
+}
+.nav-back:hover { color: var(--text); }
 
-main {
-  max-width: 1080px; margin: 0 auto; padding: 60px 24px;
-  display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px;
+/* =============================================================
+   LAYOUT
+   ============================================================= */
+.page {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 56px 32px 80px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 56px;
   align-items: start;
 }
-@media (max-width: 860px) {
-  main { grid-template-columns: 1fr; gap: 32px; padding: 32px 20px; }
+@media (max-width: 920px) {
+  .page { grid-template-columns: 1fr; gap: 40px; padding: 36px 20px 56px; }
 }
 
+/* =============================================================
+   TYPOGRAPHY
+   ============================================================= */
 h1 {
-  font-family: var(--font-display);
-  font-size: clamp(34px, 4vw, 44px);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  margin-bottom: 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 5vw, 64px);
+  letter-spacing: 1.5px;
+  line-height: 0.95;
+  margin-bottom: 14px;
 }
-.sub {
-  color: var(--text-secondary); margin-bottom: 32px;
+h1 .accent { color: var(--gold); }
+
+.lede {
+  color: var(--text2);
+  font-size: 15px;
+  max-width: 540px;
+  margin-bottom: 44px;
 }
 
-.section {
-  margin-bottom: 28px;
-}
-.section h2 {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
+.step-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: .18em;
+  color: var(--gold);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--brand);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.step-label .num {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 10px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
 }
 
-/* Plan selector */
+.section { margin-bottom: 40px; }
+
+/* =============================================================
+   PLAN CARDS
+   ============================================================= */
 .plan-grid {
   display: flex; flex-direction: column; gap: 10px;
 }
 .plan-card {
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
-  padding: 18px 20px;
-  background: var(--bg-panel);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color .2s, transform .2s, background .2s;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
-.plan-card:hover { border-color: var(--border-strong); }
+.plan-card:hover { border-color: var(--border2); }
 .plan-card.selected {
-  border-color: var(--brand);
-  background: linear-gradient(180deg, rgba(255,159,28,0.04), var(--bg-panel));
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(255,215,0,.06) 0%, var(--bg3) 60%);
+  box-shadow: 0 0 30px rgba(255,215,0,.08);
 }
 .plan-radio {
-  width: 20px; height: 20px; border: 2px solid var(--border-strong);
-  border-radius: 50%; flex-shrink: 0; position: relative;
-  transition: border-color 0.15s;
+  width: 20px; height: 20px;
+  border: 2px solid var(--text4);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color .2s;
 }
-.plan-card.selected .plan-radio { border-color: var(--brand); }
+.plan-card.selected .plan-radio { border-color: var(--gold); }
 .plan-card.selected .plan-radio::after {
   content: ''; position: absolute; inset: 3px;
-  background: var(--brand); border-radius: 50%;
+  background: var(--gold); border-radius: 50%;
 }
-.plan-info .name { font-weight: 600; font-size: 15px; }
-.plan-info .desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.plan-info .name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 1.2px;
+  color: #fff;
+  display: flex; align-items: center; gap: 10px;
+}
+.plan-info .desc {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.plan-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; font-weight: 500;
+  letter-spacing: .15em;
+  color: var(--gold);
+  background: rgba(255,215,0,.1);
+  border: 1px solid rgba(255,215,0,.3);
+  padding: 3px 7px; border-radius: 4px;
+}
 .plan-price {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 28px;
-  letter-spacing: -0.02em;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 1px;
+  color: #fff;
+  text-align: right;
+  line-height: 1;
 }
 .plan-price .pm {
   display: block;
-  font-family: var(--font-ui);
-  font-size: 11px; font-weight: 400;
-  color: var(--text-muted);
-  text-align: right;
-  letter-spacing: 0;
-  margin-top: -2px;
-}
-.plan-badge {
-  display: inline-block;
-  margin-left: 8px;
-  font-family: var(--font-mono);
-  font-size: 9px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--brand);
-  background: var(--brand-tint);
-  padding: 2px 7px; border-radius: 4px;
-  vertical-align: middle;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; font-weight: 400;
+  color: var(--text3);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-top: 4px;
 }
 
-/* Email field */
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--brand); letter-spacing: 0.1em; text-transform: uppercase; }
+/* =============================================================
+   EMAIL FIELD
+   ============================================================= */
+.field { display: flex; flex-direction: column; gap: 8px; }
 .field input {
-  font-family: var(--font-ui); font-size: 15px;
-  padding: 12px 14px;
-  background: var(--bg-raised);
-  border: 1px solid var(--border-default);
-  color: var(--text-primary);
-  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  padding: 14px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color .2s;
 }
-.field input:focus { border-color: var(--brand); }
-.field .hint { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.field input:focus { border-color: var(--gold); }
+.field input::placeholder { color: var(--text4); }
+.field .hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
 
-/* Pay method choice */
+/* =============================================================
+   PAYMENT METHOD TABS
+   ============================================================= */
 .pay-tabs {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px; margin-bottom: 16px;
+  gap: 8px; margin-bottom: 18px;
 }
 .pay-tab {
-  padding: 14px 12px;
-  border: 1px solid var(--border-default);
+  padding: 16px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--bg-panel);
   cursor: pointer;
   text-align: center;
-  font-size: 13px;
-  font-weight: 500;
-  transition: border-color 0.15s, opacity 0.15s;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.2px;
+  color: var(--text);
+  transition: border-color .2s, background .2s, opacity .2s;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
 }
-.pay-tab:hover:not(.disabled):not(.active) { border-color: var(--border-strong); }
+.pay-tab:hover:not(.disabled):not(.active) { border-color: var(--border2); }
 .pay-tab.active {
-  border-color: var(--brand);
-  background: linear-gradient(180deg, rgba(255,159,28,0.04), var(--bg-panel));
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(255,215,0,.06) 0%, var(--bg3) 60%);
 }
 .pay-tab.disabled {
-  opacity: 0.4; cursor: not-allowed; position: relative;
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
 }
-.pay-tab .ico { font-size: 18px; }
+.pay-tab .ico { font-size: 18px; color: var(--gold); }
+.pay-tab.disabled .ico { color: var(--text3); }
 .pay-tab .soon {
-  font-family: var(--font-mono); font-size: 8px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--text-muted);
-  background: var(--bg-raised);
-  padding: 2px 5px; border-radius: 3px;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; font-weight: 500;
+  letter-spacing: .12em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-top: 4px;
 }
 
-/* Payment instruction box (shown based on selected pay method) */
+/* =============================================================
+   PAYMENT PANEL
+   ============================================================= */
 .pay-panel {
   display: none;
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
-  background: var(--bg-panel);
-  padding: 22px;
-  margin-bottom: 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
 }
 .pay-panel.active { display: block; }
 .pay-panel h3 {
-  font-size: 15px; font-weight: 600;
-  margin-bottom: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; letter-spacing: 1.2px;
+  margin-bottom: 10px;
 }
-.pay-panel p { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; }
+.pay-panel p { color: var(--text2); font-size: 14px; margin-bottom: 12px; }
+.pay-panel .small-note { font-size: 13px; color: var(--text3); }
 
-/* Bank details rows */
-.bank-flag {
-  font-family: var(--font-mono);
-  font-size: 11px; font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--brand);
-  margin: 16px 0 8px;
-  display: flex; align-items: center; gap: 8px;
+/* =============================================================
+   BANK SUB-TABS (PK / UAE)
+   ============================================================= */
+.bank-country-tabs {
+  display: flex; gap: 8px; margin: 18px 0 16px 0;
 }
-.bank-flag:first-child { margin-top: 0; }
-.bank-details {
-  background: var(--bg-raised);
-  border: 1px solid var(--border-faint);
+.bank-country-tab {
+  flex: 1;
+  padding: 11px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
   border-radius: 8px;
-  padding: 14px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .03em;
+  cursor: pointer;
+  transition: border-color .2s, background .2s, color .2s;
+}
+.bank-country-tab:hover:not(.active) { border-color: var(--border2); }
+.bank-country-tab.active {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(255,215,0,.06) 0%, var(--bg3) 60%);
+  color: #fff;
+}
+.bank-country-panel { display: none; }
+.bank-country-panel.active { display: block; }
+
+/* Bank account details */
+.bank-details {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
   font-size: 13px;
 }
 .bank-row {
-  display: grid; grid-template-columns: 120px 1fr auto;
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
   align-items: center;
   gap: 12px;
-  padding: 6px 0;
+  padding: 10px 0;
 }
-.bank-row + .bank-row { border-top: 1px dashed var(--border-faint); }
-.bank-row .label { color: var(--text-muted); font-size: 12px; }
-.bank-row .value { font-family: var(--font-mono); }
+.bank-row + .bank-row { border-top: 1px solid var(--border); }
+.bank-row .label {
+  font-family: 'DM Mono', monospace;
+  color: var(--text3);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.bank-row .value {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: #fff;
+  word-break: break-all;
+}
 .bank-row .copy {
-  font-size: 11px; color: var(--brand);
-  background: transparent; border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--border);
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: border-color .2s, background .2s;
 }
-.bank-row .copy:hover { background: var(--brand-tint); }
+.bank-row .copy:hover {
+  border-color: var(--gold);
+  background: rgba(255,215,0,.06);
+}
+.bank-row .copy.copied {
+  color: var(--green);
+  border-color: rgba(34,197,94,.4);
+  background: rgba(34,197,94,.06);
+}
 
 .bank-confirm {
-  margin-top: 16px;
-  padding: 14px;
-  background: rgba(34, 211, 238, 0.06);
-  border: 1px solid rgba(34, 211, 238, 0.3);
-  border-radius: 8px;
-  font-size: 13px;
-}
-.bank-confirm strong { color: var(--accent); }
-
-.stripe-soon {
-  text-align: center;
-  padding: 32px 16px;
-}
-.stripe-soon .big { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; color: var(--text-primary); }
-.stripe-soon .small { color: var(--text-muted); font-size: 13px; }
-
-/* Pay button */
-.pay-btn {
-  width: 100%;
-  padding: 16px;
-  background: var(--brand);
-  color: var(--bg-void);
-  border: none;
+  margin-top: 18px;
+  padding: 16px 18px;
+  background: rgba(34,211,238,.04);
+  border: 1px solid rgba(34,211,238,.25);
   border-radius: 10px;
-  font-family: var(--font-ui);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.bank-confirm strong { color: var(--cyan); }
+.bank-confirm a { color: var(--cyan); border-bottom: 1px solid rgba(34,211,238,.4); }
+.bank-confirm a:hover { border-bottom-color: var(--cyan); }
+
+/* =============================================================
+   STRIPE COMING SOON
+   ============================================================= */
+.stripe-soon { text-align: center; padding: 24px 16px; }
+.stripe-soon .big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; letter-spacing: 1.4px;
+  margin-bottom: 8px;
+}
+.stripe-soon .small { color: var(--text2); font-size: 13px; max-width: 380px; margin: 0 auto; }
+
+/* =============================================================
+   PAY BUTTON — same gold gradient as index.html btn-primary
+   ============================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  padding: 17px 32px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700;
+  letter-spacing: .04em;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition: all .25s;
 }
-.pay-btn:hover:not(:disabled) {
-  background: var(--brand-glow);
-  transform: translateY(-1px);
+.btn-primary {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #000;
+  box-shadow: 0 0 40px rgba(255,215,0,.25);
 }
-.pay-btn:disabled {
-  opacity: 0.5; cursor: not-allowed;
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 60px rgba(255,215,0,.45);
 }
-.pay-btn.loading::after {
+.btn-primary:disabled {
+  opacity: 0.5; cursor: not-allowed; transform: none;
+}
+.btn.loading::after {
   content: '...';
   animation: dots 1.4s steps(3, end) infinite;
 }
-@keyframes dots { 33% { content: '.'; } 66% { content: '..'; } 100% { content: '...'; } }
+@keyframes dots {
+  0%, 33% { content: '.'; }
+  34%, 66% { content: '..'; }
+  67%, 100% { content: '...'; }
+}
 
 .error-msg {
   display: none;
-  margin-top: 12px;
-  padding: 12px 14px;
-  background: rgba(244, 63, 94, 0.08);
-  border: 1px solid rgba(244, 63, 94, 0.3);
-  color: #FECDD3;
+  margin-top: 14px;
+  padding: 13px 16px;
+  background: rgba(239,68,68,.08);
+  border: 1px solid rgba(239,68,68,.35);
+  color: #FECACA;
   border-radius: 8px;
   font-size: 13px;
 }
 .error-msg.show { display: block; }
 
-/* Order summary (right column) */
+/* =============================================================
+   ORDER SUMMARY (right column)
+   ============================================================= */
 .summary {
-  position: sticky; top: 24px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-default);
-  border-radius: 14px;
-  padding: 28px;
+  position: sticky; top: 100px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
 }
-.summary h3 { font-size: 15px; font-weight: 600; margin-bottom: 18px; }
+.summary-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--gold);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
 .summary-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 0;
+  padding: 12px 0;
   font-size: 14px;
 }
-.summary-row + .summary-row { border-top: 1px solid var(--border-faint); }
-.summary-row .l { color: var(--text-muted); }
-.summary-row .r { font-weight: 500; }
+.summary-row + .summary-row { border-top: 1px solid var(--border); }
+.summary-row .l {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.summary-row .r {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  color: #fff;
+}
 .summary-total {
   display: flex; justify-content: space-between; align-items: baseline;
-  padding-top: 16px; margin-top: 8px;
-  border-top: 1px solid var(--border-default);
+  padding-top: 22px; margin-top: 14px;
+  border-top: 1px solid var(--border2);
 }
-.summary-total .l { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.summary-total .l {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
 .summary-total .r {
-  font-family: var(--font-display); font-size: 36px; font-weight: 500;
-  letter-spacing: -0.025em;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  letter-spacing: 1px;
+  color: var(--gold);
+  line-height: 1;
 }
+.summary-total .currency {
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--text3);
+  margin-left: 6px;
+  font-family: 'DM Mono', monospace;
+}
+.summary-total .prefix {
+  font-size: 28px;
+  color: var(--text2);
+  margin-right: 2px;
+}
+
 .trust {
-  margin-top: 18px;
-  font-size: 11px; color: var(--text-muted);
-  line-height: 1.6;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  line-height: 1.9;
 }
-.trust .item { display: flex; gap: 8px; padding: 4px 0; }
-.trust .tick { color: var(--ok); }
+.trust .item { display: flex; gap: 10px; padding: 3px 0; }
+.trust .tick { color: var(--green); font-size: 12px; line-height: 1; padding-top: 1px; }
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="brand">
-      <span class="brand-mark"><span class="brand-bar"></span></span>
-      Limitless
+    <a href="/" class="nav-brand">
+      <div class="nav-mark">
+        <div class="c c1"></div>
+        <div class="lens"></div>
+        <div class="c c2"></div>
+      </div>
+      <div>
+        <div class="nav-wordmark">LIMITLESS</div>
+        <div class="nav-tag">TRADE COPIER</div>
+      </div>
     </a>
-    <a href="/" class="back-link">← Back to site</a>
+    <a href="/" class="nav-back">← Back to site</a>
   </div>
 </nav>
 
-<main>
+<main class="page">
   <!-- Left column: plan + email + payment method -->
   <div>
-    <h1>Checkout</h1>
-    <p class="sub">Pick a plan, enter your email, and pay. The license arrives in your inbox within ~2 minutes of payment confirmation.</p>
+    <h1>Get <span class="accent">Limitless</span>.</h1>
+    <p class="lede">Pick a plan, enter your email, and pay. Your license arrives in your inbox within ~2 minutes of payment confirmation. Pay with USDT (TRC20) or bank transfer.</p>
 
     <div class="section">
-      <h2>1. Plan</h2>
+      <div class="step-label"><span class="num">1</span>Choose plan</div>
       <div class="plan-grid" id="plans">
-        <label class="plan-card" data-plan="1month" data-price="50">
+        <label class="plan-card" data-plan="1month">
           <span class="plan-radio"></span>
           <div class="plan-info">
             <div class="name">1 Month</div>
-            <div class="desc">Cancel anytime, 14-day refund window</div>
+            <div class="desc">Cancel anytime · 14-day refund window</div>
           </div>
-          <div class="plan-price">$50<span class="pm">per month</span></div>
+          <div class="plan-price" data-price-slot="1month">$50<span class="pm">per month</span></div>
         </label>
-        <label class="plan-card selected" data-plan="3months" data-price="120">
+        <label class="plan-card selected" data-plan="3months">
           <span class="plan-radio"></span>
           <div class="plan-info">
             <div class="name">3 Months <span class="plan-badge">Most Popular</span></div>
-            <div class="desc">$40/mo equivalent — save 20%</div>
+            <div class="desc">$40/mo equivalent · Save 20%</div>
           </div>
-          <div class="plan-price">$120<span class="pm">3 months</span></div>
+          <div class="plan-price" data-price-slot="3months">$120<span class="pm">3 months</span></div>
         </label>
-        <label class="plan-card" data-plan="yearly" data-price="300">
+        <label class="plan-card" data-plan="yearly">
           <span class="plan-radio"></span>
           <div class="plan-info">
             <div class="name">Yearly</div>
-            <div class="desc">$25/mo equivalent — save 50%</div>
+            <div class="desc">$25/mo equivalent · Save 50%</div>
           </div>
-          <div class="plan-price">$300<span class="pm">12 months</span></div>
+          <div class="plan-price" data-price-slot="yearly">$300<span class="pm">12 months</span></div>
         </label>
       </div>
     </div>
 
     <div class="section">
-      <h2>2. Email for license delivery</h2>
+      <div class="step-label"><span class="num">2</span>Email for license delivery</div>
       <div class="field">
         <input type="email" id="email" placeholder="you@example.com" autocomplete="email" inputmode="email">
-        <div class="hint">Your license key will be sent here. Use an email you have access to.</div>
+        <div class="hint">Your license key will be sent here</div>
       </div>
     </div>
 
     <div class="section">
-      <h2>3. Payment method</h2>
+      <div class="step-label"><span class="num">3</span>Payment method</div>
       <div class="pay-tabs">
         <div class="pay-tab active" data-pay="crypto">
           <span class="ico">⟁</span>
-          USDT (TRC20)
+          USDT TRC20
         </div>
         <div class="pay-tab" data-pay="bank">
           <span class="ico">⚐</span>
-          Bank Transfer
+          BANK TRANSFER
         </div>
         <div class="pay-tab disabled" data-pay="stripe">
           <span class="ico">⊟</span>
-          Card
+          CARD
           <span class="soon">Coming Soon</span>
         </div>
       </div>
 
       <!-- Crypto pane -->
       <div class="pay-panel active" data-panel="crypto">
-        <h3>Pay with USDT on the TRON network</h3>
-        <p>You'll be redirected to a secure payment page where you'll see the exact amount in USDT and a TRC20 address to send to. Your license is delivered automatically after 1 blockchain confirmation (~2 minutes).</p>
-        <button class="pay-btn" id="payCryptoBtn">Continue to USDT Payment</button>
+        <h3>Pay with USDT on TRON network</h3>
+        <p>You'll be redirected to a secure payment page showing the exact USDT amount and a TRC20 address. License delivers automatically after 1 blockchain confirmation (~2 minutes).</p>
+        <button class="btn btn-primary" id="payCryptoBtn">Continue to USDT Payment</button>
         <div class="error-msg" id="cryptoError"></div>
       </div>
 
       <!-- Bank pane -->
       <div class="pay-panel" data-panel="bank">
         <h3>Manual bank transfer</h3>
-        <p>Send the amount to one of the accounts below, then email a screenshot of the transfer to <a href="mailto:support@limitlesscopier.com" style="color:var(--brand)">support@limitlesscopier.com</a> with your purchase email. License is sent within 24 hours after we verify the transfer.</p>
+        <p>Send the amount to the account below, then email a screenshot of your transfer to <a href="mailto:admin@limitlesscopier.com" style="color:var(--gold)">admin@limitlesscopier.com</a> with your purchase email. Our admin verifies the payment manually and issues your license within 24 hours.</p>
+        <p class="small-note">For automated, instant delivery — use USDT (TRC20) or card payment.</p>
 
-        <!-- Bank details rows are placeholders - replace with real values -->
-        <div class="bank-flag">🇵🇰 Pakistan (PKR)</div>
-        <div class="bank-details">
-          <div class="bank-row"><span class="label">Bank</span><span class="value" id="pk-bank">[BANK NAME]</span><button class="copy" data-copy="pk-bank">Copy</button></div>
-          <div class="bank-row"><span class="label">Account Title</span><span class="value" id="pk-title">[ACCOUNT TITLE]</span><button class="copy" data-copy="pk-title">Copy</button></div>
-          <div class="bank-row"><span class="label">Account #</span><span class="value" id="pk-acct">[ACCOUNT NUMBER]</span><button class="copy" data-copy="pk-acct">Copy</button></div>
-          <div class="bank-row"><span class="label">IBAN</span><span class="value" id="pk-iban">[IBAN]</span><button class="copy" data-copy="pk-iban">Copy</button></div>
+        <!-- Country sub-tabs -->
+        <div class="bank-country-tabs">
+          <button class="bank-country-tab active" data-country="pk" type="button">🇵🇰 Pakistan (PKR)</button>
+          <button class="bank-country-tab" data-country="ae" type="button">🇦🇪 UAE (AED)</button>
         </div>
 
-        <div class="bank-flag">🇮🇳 India (INR)</div>
-        <div class="bank-details">
-          <div class="bank-row"><span class="label">Bank</span><span class="value" id="in-bank">[BANK NAME]</span><button class="copy" data-copy="in-bank">Copy</button></div>
-          <div class="bank-row"><span class="label">Account Holder</span><span class="value" id="in-holder">[HOLDER NAME]</span><button class="copy" data-copy="in-holder">Copy</button></div>
-          <div class="bank-row"><span class="label">Account #</span><span class="value" id="in-acct">[ACCOUNT NUMBER]</span><button class="copy" data-copy="in-acct">Copy</button></div>
-          <div class="bank-row"><span class="label">IFSC</span><span class="value" id="in-ifsc">[IFSC CODE]</span><button class="copy" data-copy="in-ifsc">Copy</button></div>
+        <!-- Pakistan -->
+        <div class="bank-country-panel active" data-country-panel="pk">
+          <div class="bank-details">
+            <div class="bank-row"><span class="label">Bank</span><span class="value" id="pk-bank">United Bank Limited (UBL)</span><button class="copy" data-copy="pk-bank">Copy</button></div>
+            <div class="bank-row"><span class="label">Account Title</span><span class="value" id="pk-title">Noman Iqbal</span><button class="copy" data-copy="pk-title">Copy</button></div>
+            <div class="bank-row"><span class="label">Currency</span><span class="value" id="pk-currency">PKR</span><button class="copy" data-copy="pk-currency">Copy</button></div>
+            <div class="bank-row"><span class="label">IBAN</span><span class="value" id="pk-iban">PK33UNIL0109000329604158</span><button class="copy" data-copy="pk-iban">Copy</button></div>
+          </div>
         </div>
 
-        <div class="bank-flag">🇦🇪 UAE (AED / USD)</div>
-        <div class="bank-details">
-          <div class="bank-row"><span class="label">Bank</span><span class="value" id="ae-bank">[BANK NAME]</span><button class="copy" data-copy="ae-bank">Copy</button></div>
-          <div class="bank-row"><span class="label">Account Holder</span><span class="value" id="ae-holder">[HOLDER NAME]</span><button class="copy" data-copy="ae-holder">Copy</button></div>
-          <div class="bank-row"><span class="label">Account #</span><span class="value" id="ae-acct">[ACCOUNT NUMBER]</span><button class="copy" data-copy="ae-acct">Copy</button></div>
-          <div class="bank-row"><span class="label">IBAN</span><span class="value" id="ae-iban">[IBAN]</span><button class="copy" data-copy="ae-iban">Copy</button></div>
-          <div class="bank-row"><span class="label">SWIFT/BIC</span><span class="value" id="ae-swift">[SWIFT]</span><button class="copy" data-copy="ae-swift">Copy</button></div>
+        <!-- UAE -->
+        <div class="bank-country-panel" data-country-panel="ae">
+          <div class="bank-details">
+            <div class="bank-row"><span class="label">Bank</span><span class="value" id="ae-bank">Wio Bank</span><button class="copy" data-copy="ae-bank">Copy</button></div>
+            <div class="bank-row"><span class="label">Account Title</span><span class="value" id="ae-title">Namir Namir Information Technology Co. LLC</span><button class="copy" data-copy="ae-title">Copy</button></div>
+            <div class="bank-row"><span class="label">Currency</span><span class="value" id="ae-currency">AED</span><button class="copy" data-copy="ae-currency">Copy</button></div>
+            <div class="bank-row"><span class="label">IBAN</span><span class="value" id="ae-iban">AE690860000009006150262</span><button class="copy" data-copy="ae-iban">Copy</button></div>
+          </div>
         </div>
 
         <div class="bank-confirm">
-          <strong>After paying:</strong> email a screenshot of your transfer receipt + your purchase email to <a href="mailto:support@limitlesscopier.com" style="color:var(--accent)">support@limitlesscopier.com</a>. We verify and send your license within 24 hours.
+          <strong>After paying:</strong> email a screenshot of your transfer receipt and your purchase email to <a href="mailto:admin@limitlesscopier.com">admin@limitlesscopier.com</a>. Our admin will verify the payment and send your license key within 24 hours.
         </div>
       </div>
 
       <!-- Stripe pane (coming soon) -->
       <div class="pay-panel" data-panel="stripe">
         <div class="stripe-soon">
-          <div class="big">Card payments coming soon</div>
-          <div class="small">We're in review with Stripe. While we wait, USDT (TRC20) is the fastest way to start — license arrives in ~2 minutes after payment.</div>
+          <div class="big">CARD PAYMENTS COMING SOON</div>
+          <div class="small">We're in review with Stripe. While we wait — USDT (TRC20) is the fastest way to start. License arrives in ~2 minutes after payment.</div>
         </div>
       </div>
     </div>
@@ -487,127 +697,230 @@ h1 {
 
   <!-- Right column: order summary -->
   <aside class="summary">
-    <h3>Order summary</h3>
+    <div class="summary-title">Order Summary</div>
     <div class="summary-row"><span class="l">Plan</span><span class="r" id="sumPlan">3 Months</span></div>
-    <div class="summary-row"><span class="l">Currency</span><span class="r">USD → USDT (TRC20)</span></div>
+    <div class="summary-row"><span class="l">Payment</span><span class="r" id="sumMethod">USDT (TRC20)</span></div>
     <div class="summary-row"><span class="l">License binding</span><span class="r">Your PC hardware</span></div>
-    <div class="summary-total"><span class="l">Total</span><span class="r"><span style="font-size:24px;color:var(--text-secondary)">$</span><span id="sumTotal">120</span></span></div>
+    <div class="summary-total">
+      <span class="l">Total</span>
+      <span class="r">
+        <span class="prefix" id="sumCurrencyPrefix">$</span><span id="sumTotal">120</span><span class="currency" id="sumCurrencySuffix">USD</span>
+      </span>
+    </div>
 
     <div class="trust">
-      <div class="item"><span class="tick">✓</span> Email delivery within ~2 min</div>
-      <div class="item"><span class="tick">✓</span> 14-day refund (monthly &amp; 3-month plans)</div>
-      <div class="item"><span class="tick">✓</span> Hardware move-license support included</div>
+      <div class="item"><span class="tick">✓</span><span>Email delivery within ~2 min</span></div>
+      <div class="item"><span class="tick">✓</span><span>14-day refund · monthly &amp; 3-month plans</span></div>
+      <div class="item"><span class="tick">✓</span><span>Hardware migration support</span></div>
     </div>
   </aside>
 </main>
 
 <script>
-// --- Plan selection ---
-const planEls = document.querySelectorAll('.plan-card');
-const sumPlan = document.getElementById('sumPlan');
-const sumTotal = document.getElementById('sumTotal');
+// =========================================================
+// Pricing model — single source of truth.
+// Three matrices keyed by plan. Active matrix chosen by
+// (payMethod, bankCountry).
+// =========================================================
+const PRICES = {
+  crypto: {
+    "1month":  { amount: 50,  currencyPrefix: "$", currencySuffix: "USD", label: "USDT (TRC20)", unit: "per month" },
+    "3months": { amount: 120, currencyPrefix: "$", currencySuffix: "USD", label: "USDT (TRC20)", unit: "3 months" },
+    "yearly":  { amount: 300, currencyPrefix: "$", currencySuffix: "USD", label: "USDT (TRC20)", unit: "12 months" },
+  },
+  bank_pk: {
+    "1month":  { amount: 14000, currencyPrefix: "₨", currencySuffix: "PKR", label: "Bank Transfer (PKR)", unit: "per month" },
+    "3months": { amount: 33000, currencyPrefix: "₨", currencySuffix: "PKR", label: "Bank Transfer (PKR)", unit: "3 months" },
+    "yearly":  { amount: 84000, currencyPrefix: "₨", currencySuffix: "PKR", label: "Bank Transfer (PKR)", unit: "12 months" },
+  },
+  bank_ae: {
+    // USD × 3.65 — clean conversion, no rounding
+    "1month":  { amount: 182.50, currencyPrefix: "", currencySuffix: "AED", label: "Bank Transfer (AED)", unit: "per month" },
+    "3months": { amount: 438,    currencyPrefix: "", currencySuffix: "AED", label: "Bank Transfer (AED)", unit: "3 months" },
+    "yearly":  { amount: 1095,   currencyPrefix: "", currencySuffix: "AED", label: "Bank Transfer (AED)", unit: "12 months" },
+  },
+};
 
-function selectPlan(plan, price, label) {
-  planEls.forEach(el => el.classList.toggle('selected', el.dataset.plan === plan));
-  sumPlan.textContent = label;
-  sumTotal.textContent = price;
+// =========================================================
+// State
+// =========================================================
+const state = {
+  plan: "3months",
+  payMethod: "crypto",
+  bankCountry: "pk",
+};
+
+// Initialize from URL ?plan=1month etc. (deep link from index.html pricing buttons)
+(function readUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const p = params.get("plan");
+  if (p && ["1month", "3months", "yearly"].includes(p)) state.plan = p;
+})();
+
+const planLabels = {
+  "1month":  "1 Month",
+  "3months": "3 Months",
+  "yearly":  "Yearly",
+};
+
+function activeMatrix() {
+  if (state.payMethod === "bank") return PRICES["bank_" + state.bankCountry];
+  return PRICES.crypto;
 }
-planEls.forEach(el => {
-  el.addEventListener('click', () => {
-    const plan = el.dataset.plan;
-    const price = el.dataset.price;
-    const label = el.querySelector('.plan-info .name').firstChild.textContent.trim();
-    selectPlan(plan, price, label);
+
+function formatAmount(amount, suffix) {
+  if (suffix === "PKR") return amount.toLocaleString("en-US");
+  if (suffix === "AED") return amount % 1 === 0 ? amount.toLocaleString("en-US") : amount.toFixed(2);
+  return amount % 1 === 0 ? String(amount) : amount.toFixed(2);
+}
+
+function renderPrices() {
+  const matrix = activeMatrix();
+  // Plan cards
+  Object.keys(matrix).forEach(plan => {
+    const slot = document.querySelector(`[data-price-slot="${plan}"]`);
+    if (!slot) return;
+    const p = matrix[plan];
+    const amountStr = formatAmount(p.amount, p.currencySuffix);
+    slot.innerHTML = `${p.currencyPrefix}${amountStr}<span class="pm">${p.currencySuffix} · ${p.unit}</span>`;
+  });
+  // Summary
+  const cur = matrix[state.plan];
+  document.getElementById("sumPlan").textContent = planLabels[state.plan];
+  document.getElementById("sumMethod").textContent = cur.label;
+  document.getElementById("sumCurrencyPrefix").textContent = cur.currencyPrefix || "";
+  document.getElementById("sumTotal").textContent = formatAmount(cur.amount, cur.currencySuffix);
+  document.getElementById("sumCurrencySuffix").textContent = cur.currencySuffix;
+}
+
+// Apply initial plan selection (incl. from URL param)
+function applyInitialPlan() {
+  document.querySelectorAll(".plan-card").forEach(c =>
+    c.classList.toggle("selected", c.dataset.plan === state.plan));
+}
+
+// =========================================================
+// Plan selection
+// =========================================================
+document.querySelectorAll(".plan-card").forEach(el => {
+  el.addEventListener("click", () => {
+    state.plan = el.dataset.plan;
+    document.querySelectorAll(".plan-card").forEach(c =>
+      c.classList.toggle("selected", c.dataset.plan === state.plan));
+    renderPrices();
   });
 });
 
-// --- Payment method tabs ---
-document.querySelectorAll('.pay-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    if (tab.classList.contains('disabled')) return;
-    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.querySelector(`.pay-panel[data-panel="${tab.dataset.pay}"]`).classList.add('active');
+// =========================================================
+// Payment-method tabs
+// =========================================================
+document.querySelectorAll(".pay-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    if (tab.classList.contains("disabled")) return;
+    state.payMethod = tab.dataset.pay;
+    document.querySelectorAll(".pay-tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".pay-panel").forEach(p => p.classList.remove("active"));
+    tab.classList.add("active");
+    document.querySelector(`.pay-panel[data-panel="${state.payMethod}"]`).classList.add("active");
+    renderPrices();
   });
 });
 
-// --- Copy buttons ---
-document.querySelectorAll('.copy').forEach(btn => {
-  btn.addEventListener('click', () => {
+// =========================================================
+// Bank-country sub-tabs
+// =========================================================
+document.querySelectorAll(".bank-country-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    state.bankCountry = tab.dataset.country;
+    document.querySelectorAll(".bank-country-tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".bank-country-panel").forEach(p => p.classList.remove("active"));
+    tab.classList.add("active");
+    document.querySelector(`.bank-country-panel[data-country-panel="${state.bankCountry}"]`).classList.add("active");
+    renderPrices();
+  });
+});
+
+// =========================================================
+// Copy buttons (bank details)
+// =========================================================
+document.querySelectorAll(".copy").forEach(btn => {
+  btn.addEventListener("click", () => {
     const target = document.getElementById(btn.dataset.copy);
     if (!target) return;
     navigator.clipboard.writeText(target.textContent.trim()).then(() => {
       const orig = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(() => btn.textContent = orig, 1200);
+      btn.textContent = "Copied";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.classList.remove("copied");
+      }, 1400);
     });
   });
 });
 
-// --- Crypto checkout ---
-const cryptoBtn = document.getElementById('payCryptoBtn');
-const cryptoErr = document.getElementById('cryptoError');
-const emailEl = document.getElementById('email');
-
-// API base - the server endpoint
-const API_BASE = 'https://api.limitlesscopier.com';
+// =========================================================
+// Crypto checkout (calls server -> NowPayments -> redirect)
+// =========================================================
+const cryptoBtn = document.getElementById("payCryptoBtn");
+const cryptoErr = document.getElementById("cryptoError");
+const emailEl   = document.getElementById("email");
+const API_BASE  = "https://api.limitlesscopier.com";
 
 function showCryptoError(msg) {
   cryptoErr.textContent = msg;
-  cryptoErr.classList.add('show');
+  cryptoErr.classList.add("show");
 }
 function hideCryptoError() {
-  cryptoErr.classList.remove('show');
+  cryptoErr.classList.remove("show");
 }
 
-cryptoBtn.addEventListener('click', async () => {
+cryptoBtn.addEventListener("click", async () => {
   hideCryptoError();
   const email = emailEl.value.trim();
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-    showCryptoError('Please enter a valid email address.');
+    showCryptoError("Please enter a valid email address.");
     emailEl.focus();
     return;
   }
-  const selected = document.querySelector('.plan-card.selected');
-  if (!selected) {
-    showCryptoError('Please select a plan.');
-    return;
-  }
+  const selected = document.querySelector(".plan-card.selected");
+  if (!selected) { showCryptoError("Please select a plan."); return; }
   const plan = selected.dataset.plan;
 
   cryptoBtn.disabled = true;
-  cryptoBtn.classList.add('loading');
-  cryptoBtn.textContent = 'Creating payment';
+  cryptoBtn.classList.add("loading");
+  cryptoBtn.textContent = "Creating payment";
 
   try {
     const res = await fetch(`${API_BASE}/api/checkout/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, email })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan, email }),
     });
     if (!res.ok) {
       const t = await res.text();
-      let msg = 'Could not create payment. Please try again.';
+      let msg = "Could not create payment. Please try again.";
       try {
         const j = JSON.parse(t);
-        if (j.error) msg = j.error;
+        if (j.error)  msg = j.error;
         else if (j.detail) msg = j.detail;
       } catch {}
       throw new Error(msg);
     }
     const data = await res.json();
-    if (!data.invoiceUrl) throw new Error('Server did not return an invoice URL.');
-
-    // Redirect to NowPayments hosted checkout
+    if (!data.invoiceUrl) throw new Error("Server did not return an invoice URL.");
     window.location.href = data.invoiceUrl;
   } catch (err) {
-    showCryptoError(err.message || 'Network error. Please try again.');
+    showCryptoError(err.message || "Network error. Please try again.");
     cryptoBtn.disabled = false;
-    cryptoBtn.classList.remove('loading');
-    cryptoBtn.textContent = 'Continue to USDT Payment';
+    cryptoBtn.classList.remove("loading");
+    cryptoBtn.textContent = "Continue to USDT Payment";
   }
 });
+
+// Initial render
+applyInitialPlan();
+renderPrices();
 </script>
 </body>
 </html>
