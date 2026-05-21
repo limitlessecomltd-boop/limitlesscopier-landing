@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — Limitless Trade Copier</title>
+<meta name="description" content="Terms of Service for Limitless Trade Copier, operated by Namir Namir Information Technology Co. LLC.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#030508">
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #FFD700;
+  --gold2: #FFA500;
+  --green: #22C55E;
+  --red: #EF4444;
+  --cyan: #22D3EE;
+
+  --bg: #030508;
+  --bg2: #080d15;
+  --bg3: #0d1525;
+  --bg4: #121b2e;
+
+  --text: #fff;
+  --text2: rgba(255,255,255,.65);
+  --text3: rgba(255,255,255,.40);
+  --text4: rgba(255,255,255,.20);
+
+  --border: rgba(255,255,255,.08);
+  --border2: rgba(255,255,255,.14);
+  --gold-glow: rgba(255,215,0,.25);
+
+  --max: 1200px;
+  --doc-max: 760px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.65;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+a { color: var(--gold); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Nav identical to checkout.html */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(3,5,8,.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner { max-width: var(--max); margin: 0 auto; padding: 18px 32px; display: flex; align-items: center; gap: 32px; }
+.nav-brand { display: flex; align-items: center; gap: 14px; }
+.nav-mark { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+.nav-mark .c { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; transform: translateY(-50%); }
+.nav-mark .c1 { left: 0; background: var(--green); }
+.nav-mark .c2 { right: 0; background: var(--red); }
+.nav-mark .lens { position: absolute; top: 50%; left: 50%; width: 6px; height: 18px; background: var(--gold); border-radius: 50%; transform: translate(-50%,-50%); }
+.nav-wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: #fff; line-height: 1; }
+.nav-tag { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .15em; color: var(--gold); margin-top: 2px; }
+.nav-back {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: .12em;
+  color: var(--text3); text-transform: uppercase;
+  transition: color .2s;
+}
+.nav-back:hover { color: var(--text); text-decoration: none; }
+
+/* Doc layout */
+main {
+  flex: 1;
+  max-width: var(--doc-max);
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+  width: 100%;
+}
+
+.doc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(40px, 5vw, 56px);
+  letter-spacing: 1.5px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.doc-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.doc-meta strong { color: var(--text2); font-weight: 400; }
+
+h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  margin: 44px 0 14px;
+  color: var(--gold);
+}
+h2 .num {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  color: var(--text3);
+  letter-spacing: .1em;
+  display: inline-block;
+  margin-right: 12px;
+  vertical-align: 2px;
+}
+
+h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 24px 0 8px;
+}
+
+p { color: var(--text2); margin-bottom: 14px; font-size: 15px; }
+p strong { color: #fff; font-weight: 600; }
+
+ul, ol { margin: 0 0 14px 24px; color: var(--text2); }
+li { margin: 6px 0; font-size: 15px; }
+li strong { color: #fff; font-weight: 600; }
+
+.callout {
+  margin: 18px 0;
+  padding: 16px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.callout strong { color: var(--gold); }
+
+.contact-block {
+  margin-top: 56px;
+  padding: 24px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.contact-block h3 { margin-top: 0; }
+.contact-block p { margin-bottom: 6px; }
+
+.toc {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin-bottom: 40px;
+}
+.toc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+.toc ol { margin: 0; padding-left: 18px; color: var(--text2); }
+.toc li { margin: 3px 0; font-size: 14px; }
+.toc a { color: var(--text2); }
+.toc a:hover { color: var(--gold); text-decoration: none; }
+
+/* Footer matches site */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 24px;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+.footer a { color: var(--text3); margin: 0 10px; }
+.footer a:hover { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-mark">
+        <div class="c c1"></div>
+        <div class="lens"></div>
+        <div class="c c2"></div>
+      </div>
+      <div>
+        <div class="nav-wordmark">LIMITLESS</div>
+        <div class="nav-tag">TRADE COPIER</div>
+      </div>
+    </a>
+    <a href="/" class="nav-back">← Back to site</a>
+  </div>
+</nav>
+
+<main>
+  <div class="doc-label">Legal</div>
+  <h1>Terms of Service</h1>
+  <div class="doc-meta">
+    <strong>Effective:</strong> 21 May 2026 &nbsp;·&nbsp; <strong>Last updated:</strong> 21 May 2026
+  </div>
+
+  <p>
+    These Terms of Service ("<strong>Terms</strong>") govern your use of Limitless Trade Copier (the "<strong>Service</strong>"), operated by <strong>Namir Namir Information Technology Co. LLC</strong> ("<strong>we</strong>", "<strong>us</strong>", "<strong>our</strong>"), a company registered in the United Arab Emirates. By purchasing, downloading, installing, or using the Service, you agree to be bound by these Terms. If you do not agree, do not use the Service.
+  </p>
+
+  <div class="callout">
+    <strong>Plain-English summary.</strong> We license you software that copies trades between MT5 accounts. You agree not to abuse it, we don't promise it makes you money, your license is bound to one PC, and refunds work the way the <a href="/refund.html">Refund Policy</a> says. Read the full terms below for the binding version.
+  </div>
+
+  <div class="toc">
+    <div class="toc-label">Contents</div>
+    <ol>
+      <li><a href="#about">About us</a></li>
+      <li><a href="#service">The service</a></li>
+      <li><a href="#license">License grant &amp; restrictions</a></li>
+      <li><a href="#account">Your account &amp; license key</a></li>
+      <li><a href="#payment">Payment &amp; subscription</a></li>
+      <li><a href="#refunds">Refunds</a></li>
+      <li><a href="#prohibited">Prohibited uses</a></li>
+      <li><a href="#ip">Intellectual property</a></li>
+      <li><a href="#trading">Trading risk &amp; no financial advice</a></li>
+      <li><a href="#disclaimers">Disclaimers</a></li>
+      <li><a href="#liability">Limitation of liability</a></li>
+      <li><a href="#indemnification">Indemnification</a></li>
+      <li><a href="#termination">Termination</a></li>
+      <li><a href="#changes">Changes to these terms</a></li>
+      <li><a href="#law">Governing law &amp; disputes</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ol>
+  </div>
+
+  <h2 id="about"><span class="num">01</span>About us</h2>
+  <p>
+    The Service is provided by <strong>Namir Namir Information Technology Co. LLC</strong>, a limited liability company registered in the United Arab Emirates. References to "Limitless", "we", "our", or "us" in these Terms refer to that company. References to "you" or "your" refer to the natural person or legal entity that purchases or uses the Service.
+  </p>
+
+  <h2 id="service"><span class="num">02</span>The service</h2>
+  <p>
+    Limitless Trade Copier is desktop software for Windows that connects to one or more MetaTrader 5 ("<strong>MT5</strong>") trading accounts and replicates trade activity (open, modify, close orders) from a designated "master" account to one or more "slave" accounts according to rules you configure. The Service also includes related tools such as a prop-firm trading journal and per-account risk protection.
+  </p>
+  <p>
+    The Service does not place trades on your behalf based on its own judgement. It only mirrors decisions made by the human or algorithm controlling the master account. The Service is a tool, not a trading strategy.
+  </p>
+
+  <h2 id="license"><span class="num">03</span>License grant &amp; restrictions</h2>
+  <p>
+    Subject to your continued compliance with these Terms and payment of all applicable fees, we grant you a <strong>limited, non-exclusive, non-transferable, non-sublicensable license</strong> to install and use the Service on a single computer for the duration of your active subscription.
+  </p>
+  <h3>Per-machine binding</h3>
+  <p>
+    Each license key activates on one computer. The Service identifies a computer using a hardware fingerprint derived from multiple components (machine identifier, CPU, motherboard, BIOS). To move your license to a different computer, contact <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a> — we release the binding within 24 hours so you can activate on the new machine. We do not impose a hard cap on lifetime moves, but we reserve the right to refuse excessive or abusive transfers.
+  </p>
+  <h3>You may not</h3>
+  <ul>
+    <li>Share, resell, sublicense, lease, or distribute your license key to any other person or entity.</li>
+    <li>Reverse-engineer, decompile, or disassemble the Service, except to the extent that this restriction is prohibited by applicable law.</li>
+    <li>Remove, alter, or obscure any proprietary notices in the Service.</li>
+    <li>Use the Service in a way that violates the terms of any broker, prop firm, or third-party platform you connect to it.</li>
+    <li>Use the Service to engage in market manipulation, fraud, or any activity that would violate applicable securities, commodities, or anti-money-laundering laws.</li>
+  </ul>
+
+  <h2 id="account"><span class="num">04</span>Your account &amp; license key</h2>
+  <p>
+    When you purchase a subscription, we generate a unique license key (e.g., <code style="font-family:'DM Mono',monospace;color:var(--gold);">LTC-1MON-XXXX-XXXX-XXXX</code>) and email it to the address you provided at checkout. <strong>You are responsible for keeping your license key confidential.</strong> Anyone with your license key can activate the Service on a machine.
+  </p>
+  <p>
+    If you believe your license key has been compromised, contact <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a> immediately. We may revoke and reissue your key.
+  </p>
+  <p>
+    You must provide an accurate, working email address at checkout. We use this address to deliver your license, send onboarding instructions, and communicate about your subscription. We are not responsible for non-delivery caused by an inaccurate address, an inbox that bounces, or aggressive spam filtering.
+  </p>
+
+  <h2 id="payment"><span class="num">05</span>Payment &amp; subscription</h2>
+  <p>
+    The Service is sold as a fixed-duration license. Plans currently offered:
+  </p>
+  <ul>
+    <li><strong>1 Month</strong> — $50 USD / ₨14,000 PKR / AED 182.50</li>
+    <li><strong>3 Months</strong> — $120 USD / ₨33,000 PKR / AED 438</li>
+    <li><strong>Yearly (12 Months)</strong> — $300 USD / ₨84,000 PKR / AED 1,095</li>
+  </ul>
+  <p>
+    Pricing displayed at checkout is final at the time of purchase. We may change pricing for future purchases at any time; existing licenses are not affected by price changes during their paid term.
+  </p>
+  <p>
+    The Service supports the following payment methods: (a) USDT cryptocurrency on the TRON network (TRC20), processed by NowPayments; (b) bank transfer in PKR to our partner account in Pakistan or in AED to our company account in the United Arab Emirates. Card payments via Stripe are planned but not yet active.
+  </p>
+  <p>
+    For crypto payments, your license is automatically issued and emailed within approximately two minutes of blockchain confirmation. For bank transfers, you must email a copy of your transfer receipt to <a href="mailto:admin@limitlesscopier.com">admin@limitlesscopier.com</a>; we verify the payment manually and issue the license within 24 hours.
+  </p>
+  <p>
+    Subscriptions <strong>do not auto-renew</strong>. When your term ends, the Service ceases to function and you must purchase a new license to continue.
+  </p>
+
+  <h2 id="refunds"><span class="num">06</span>Refunds</h2>
+  <p>
+    Refund eligibility and procedure are governed by our <a href="/refund.html">Refund Policy</a>, which is incorporated by reference into these Terms.
+  </p>
+
+  <h2 id="prohibited"><span class="num">07</span>Prohibited uses</h2>
+  <p>
+    You agree not to use the Service in any way that:
+  </p>
+  <ul>
+    <li>Violates any applicable law or regulation in your jurisdiction or ours.</li>
+    <li>Infringes the rights of any third party, including intellectual property, privacy, or contractual rights.</li>
+    <li>Attempts to gain unauthorised access to our systems, license server, or another user's account.</li>
+    <li>Distributes malware, viruses, or any other harmful code, or that interferes with the operation of the Service.</li>
+    <li>Misrepresents your identity, account ownership, or the source of trades being copied.</li>
+    <li>Violates the terms of any broker, prop firm challenge, funded account programme, or third-party platform you connect through the Service.</li>
+  </ul>
+  <p>
+    We may suspend or revoke your license without refund if we reasonably believe you are violating these prohibitions.
+  </p>
+
+  <h2 id="ip"><span class="num">08</span>Intellectual property</h2>
+  <p>
+    The Service, including all software, code, designs, trademarks, logos, and documentation, is the property of Namir Namir Information Technology Co. LLC and is protected by copyright, trademark, and other intellectual property laws. Your license grants you a right to use the Service, not ownership of it.
+  </p>
+  <p>
+    Feedback, suggestions, or feature requests you provide to us are non-confidential and may be used by us without compensation or attribution.
+  </p>
+
+  <h2 id="trading"><span class="num">09</span>Trading risk &amp; no financial advice</h2>
+  <div class="callout">
+    <strong>Important.</strong> Trading foreign exchange, futures, CFDs, and other leveraged instruments carries substantial risk of loss and is not suitable for everyone. You can lose more than your initial investment. The Service does not generate trading signals or make trading decisions — it only replicates orders you (or a system you control) place on a master account.
+  </div>
+  <p>
+    Nothing in the Service or on our website constitutes investment, financial, legal, tax, or other professional advice. You are solely responsible for your trading decisions and for any losses, costs, fees, or taxes that result from them.
+  </p>
+  <p>
+    Past performance of any trading account or strategy connected through the Service is not indicative of future results. We make no representation that you will achieve any particular financial outcome from using the Service.
+  </p>
+
+  <h2 id="disclaimers"><span class="num">10</span>Disclaimers</h2>
+  <p>
+    <strong>The Service is provided "as is" and "as available", without warranties of any kind, express or implied.</strong> To the maximum extent permitted by law, we disclaim all warranties, including warranties of merchantability, fitness for a particular purpose, non-infringement, accuracy, reliability, and uninterrupted operation.
+  </p>
+  <p>
+    Without limiting the generality of the above, we do not warrant that:
+  </p>
+  <ul>
+    <li>Trade copying will occur without latency, slippage, partial fills, requotes, or rejected orders.</li>
+    <li>The Service will be free of bugs, errors, defects, or service interruptions.</li>
+    <li>The Service will be compatible with all broker servers, MT5 builds, prop firm setups, or operating system configurations.</li>
+    <li>The Service will detect or prevent all violations of broker, prop firm, or platform rules.</li>
+    <li>You will achieve any particular trading outcome, win rate, drawdown level, or risk-adjusted return by using the Service.</li>
+  </ul>
+
+  <h2 id="liability"><span class="num">11</span>Limitation of liability</h2>
+  <p>
+    To the maximum extent permitted by law, in no event will we be liable to you for any indirect, incidental, consequential, special, punitive, or exemplary damages, including without limitation lost profits, lost trading opportunities, prop firm challenge fees, account drawdowns, business interruption, or loss of data, arising out of or related to your use of the Service.
+  </p>
+  <p>
+    Our total aggregate liability to you, for any cause of action and regardless of the form of action, will not exceed <strong>the total amount you paid us for the Service in the twelve (12) months immediately preceding the event giving rise to the claim</strong>.
+  </p>
+  <p>
+    These limitations apply even if we have been advised of the possibility of such damages and even if a limited remedy fails of its essential purpose. Some jurisdictions do not allow the exclusion or limitation of certain damages; in those jurisdictions, our liability is limited to the maximum extent permitted by law.
+  </p>
+
+  <h2 id="indemnification"><span class="num">12</span>Indemnification</h2>
+  <p>
+    You agree to indemnify, defend, and hold harmless Namir Namir Information Technology Co. LLC, its officers, directors, employees, and agents from and against any and all claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or related to: (a) your use of the Service; (b) your violation of these Terms; (c) your violation of any third-party right, including but not limited to broker, prop firm, or platform terms of service; or (d) any trading activity conducted using the Service, including the actions of any third party authorised to use your license.
+  </p>
+
+  <h2 id="termination"><span class="num">13</span>Termination</h2>
+  <p>
+    Your license terminates automatically at the end of its paid term unless you purchase a renewal. We may also suspend or terminate your license immediately, with or without notice, if you breach these Terms, including by violating the prohibited uses in Section 7.
+  </p>
+  <p>
+    Termination for breach does not entitle you to a refund of any fees already paid. Sections of these Terms that by their nature should survive termination (including intellectual property, disclaimers, limitation of liability, indemnification, and governing law) will survive.
+  </p>
+
+  <h2 id="changes"><span class="num">14</span>Changes to these terms</h2>
+  <p>
+    We may modify these Terms at any time. We will post the updated Terms on this page and update the "Last updated" date at the top. For material changes, we will make a reasonable effort to notify you by email or via the Service. Your continued use of the Service after a change becomes effective constitutes acceptance of the modified Terms.
+  </p>
+
+  <h2 id="law"><span class="num">15</span>Governing law &amp; disputes</h2>
+  <p>
+    These Terms and any dispute arising out of or related to them or the Service are governed by the laws of the <strong>United Arab Emirates</strong>, without regard to its conflict-of-laws rules. The courts of the United Arab Emirates have exclusive jurisdiction over any dispute, controversy, or claim arising out of or relating to these Terms, except that we may seek injunctive or other equitable relief in any court of competent jurisdiction to protect our intellectual property.
+  </p>
+  <p>
+    Before commencing formal proceedings, you agree to first contact us at <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a> and attempt in good faith to resolve the dispute informally. Most disputes can be resolved this way without escalation.
+  </p>
+
+  <h2 id="contact"><span class="num">16</span>Contact</h2>
+  <div class="contact-block">
+    <h3>Limitless Trade Copier</h3>
+    <p>Operated by <strong>Namir Namir Information Technology Co. LLC</strong></p>
+    <p>Registered in the United Arab Emirates</p>
+    <p style="margin-top:14px;">
+      General &amp; support: <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a><br>
+      Payments &amp; licensing: <a href="mailto:admin@limitlesscopier.com">admin@limitlesscopier.com</a>
+    </p>
+  </div>
+</main>
+
+<div class="footer">
+  <a href="/">Home</a>
+  <a href="/terms.html">Terms</a>
+  <a href="/privacy.html">Privacy</a>
+  <a href="/refund.html">Refunds</a>
+</div>
+
+</body>
+</html>

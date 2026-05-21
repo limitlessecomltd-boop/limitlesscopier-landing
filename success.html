@@ -1,316 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Payment received — Limitless Trade Copier</title>
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#030508">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --bg-void: #050507;
-  --bg-base: #0A0A0C;
-  --bg-panel: #111114;
-  --bg-raised: #16161A;
-  --border-faint: #1A1A1D;
-  --border-default: #2A2A30;
-  --border-strong: #3A3A42;
-  --text-primary: #F5F5F7;
-  --text-secondary: #C0C0C5;
-  --text-muted: #88888F;
-  --brand: #FF9F1C;
-  --brand-glow: #FFB347;
-  --brand-tint: rgba(255, 159, 28, 0.08);
-  --accent: #22D3EE;
-  --ok: #10B981;
-  --err: #F43F5E;
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-ui: 'Geist', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --gold: #FFD700;
+  --gold2: #FFA500;
+  --green: #22C55E;
+  --red: #EF4444;
+  --cyan: #22D3EE;
+
+  --bg: #030508;
+  --bg2: #080d15;
+  --bg3: #0d1525;
+  --bg4: #121b2e;
+
+  --text: #fff;
+  --text2: rgba(255,255,255,.65);
+  --text3: rgba(255,255,255,.40);
+  --text4: rgba(255,255,255,.20);
+
+  --border: rgba(255,255,255,.08);
+  --border2: rgba(255,255,255,.14);
+  --gold-glow: rgba(255,215,0,.25);
+
+  --max: 1200px;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: var(--font-ui);
-  background: var(--bg-base);
-  color: var(--text-primary);
-  min-height: 100vh;
-  line-height: 1.55;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+  min-height: 100vh;
   display: flex; flex-direction: column;
 }
-a { color: var(--brand); text-decoration: none; }
+a { color: var(--gold); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-.nav { padding: 18px 24px; border-bottom: 1px solid var(--border-faint); }
-.nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
-.brand {
-  font-family: var(--font-display); font-weight: 600; font-size: 20px;
-  letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
-  color: var(--text-primary);
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(3,5,8,.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
 }
-.brand:hover { text-decoration: none; }
-.brand-mark { width: 28px; height: 18px; position: relative; }
-.brand-mark::before, .brand-mark::after {
-  content: ''; position: absolute; width: 12px; height: 12px;
-  border-radius: 50%; top: 3px;
-}
-.brand-mark::before { left: 0; background: var(--accent); }
-.brand-mark::after { right: 0; background: var(--brand); }
+.nav-inner { max-width: var(--max); margin: 0 auto; padding: 18px 32px; display: flex; align-items: center; gap: 32px; }
+.nav-brand { display: flex; align-items: center; gap: 14px; }
+.nav-mark { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+.nav-mark .c { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; transform: translateY(-50%); }
+.nav-mark .c1 { left: 0; background: var(--green); }
+.nav-mark .c2 { right: 0; background: var(--red); }
+.nav-mark .lens { position: absolute; top: 50%; left: 50%; width: 6px; height: 18px; background: var(--gold); border-radius: 50%; transform: translate(-50%,-50%); }
+.nav-wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: #fff; line-height: 1; }
+.nav-tag { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .15em; color: var(--gold); margin-top: 2px; }
 
-main {
-  flex: 1;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 60px 24px;
-  width: 100%;
-}
+main { flex: 1; max-width: 720px; margin: 0 auto; padding: 64px 24px 80px; width: 100%; text-align: center; }
 
-/* WAITING STATE */
-.state {
-  text-align: center;
-}
-.state.hidden { display: none; }
-
-.spinner {
-  width: 64px; height: 64px;
-  margin: 0 auto 28px;
-  position: relative;
-}
-.spinner::before {
-  content: ''; position: absolute; inset: 0;
-  border: 3px solid var(--border-default);
-  border-top-color: var(--brand);
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
+.spinner { width: 64px; height: 64px; margin: 0 auto 32px; position: relative; }
+.spinner::before { content: ''; position: absolute; inset: 0; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.check {
-  width: 72px; height: 72px;
-  margin: 0 auto 28px;
-  border-radius: 50%;
-  background: var(--ok);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--bg-void);
-  font-size: 36px;
-  font-weight: 700;
-}
+.check, .x-mark { width: 72px; height: 72px; margin: 0 auto 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; font-family: 'DM Sans', sans-serif; }
+.check { background: var(--green); color: var(--bg); }
+.x-mark { background: var(--red); color: #fff; }
 
-.x-mark {
-  width: 72px; height: 72px;
-  margin: 0 auto 28px;
-  border-radius: 50%;
-  background: var(--err);
-  display: flex; align-items: center; justify-content: center;
-  color: white;
-  font-size: 36px;
-  font-weight: 700;
-}
+h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(34px, 4.5vw, 52px); letter-spacing: 1.5px; line-height: 1; margin-bottom: 16px; }
+h1 .accent { color: var(--gold); }
 
-h1 {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 38px);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  margin-bottom: 14px;
-}
+.lede { color: var(--text2); font-size: 15px; max-width: 520px; margin: 0 auto 28px; }
 
-.lede {
-  color: var(--text-secondary);
-  margin-bottom: 28px;
-  font-size: 16px;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-}
+.status-msg { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); letter-spacing: .15em; text-transform: uppercase; margin-bottom: 24px; }
 
-.status-msg {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 28px;
-}
+.order-id { display: inline-block; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); background: var(--bg3); border: 1px solid var(--border); padding: 9px 14px; border-radius: 6px; letter-spacing: .08em; }
 
-.order-id {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 8px 12px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-faint);
-  border-radius: 6px;
-  display: inline-block;
-}
+.key-panel { margin: 32px auto; max-width: 540px; padding: 32px; background: linear-gradient(135deg, rgba(255,215,0,.08) 0%, var(--bg3) 60%); border: 1px solid var(--gold); border-radius: 14px; text-align: center; box-shadow: 0 0 40px rgba(255,215,0,.12); }
+.key-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.key-value { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; letter-spacing: 0.06em; color: var(--gold); word-break: break-all; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; }
+.copy-key { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: .04em; padding: 11px 24px; background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; border: none; border-radius: 8px; cursor: pointer; transition: all .25s; box-shadow: 0 0 30px rgba(255,215,0,.2); }
+.copy-key:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(255,215,0,.4); }
+.copy-key.copied { background: var(--green); color: var(--bg); }
 
-/* LICENSE KEY DISPLAY */
-.key-panel {
-  margin: 28px 0;
-  padding: 28px;
-  background: linear-gradient(180deg, rgba(255,159,28,0.06), var(--bg-panel));
-  border: 1px solid var(--brand);
-  border-radius: 14px;
-  text-align: center;
-}
-.key-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--brand);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin-bottom: 12px;
-}
-.key-value {
-  font-family: var(--font-mono);
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--brand-glow);
-  word-break: break-all;
-  padding: 8px;
-  background: var(--bg-void);
-  border-radius: 8px;
-  margin-bottom: 14px;
-}
-.copy-key {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  padding: 8px 16px;
-  background: var(--brand);
-  color: var(--bg-void);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-.copy-key:hover { background: var(--brand-glow); }
-.copy-key.copied { background: var(--ok); }
+.steps { max-width: 540px; margin: 36px auto; background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 28px; text-align: left; }
+.steps h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1.2px; margin-bottom: 16px; text-align: center; }
+.steps ol { list-style: none; counter-reset: stepnum; }
+.steps li { position: relative; padding: 10px 0 10px 38px; counter-increment: stepnum; font-size: 14px; color: var(--text2); }
+.steps li::before { content: counter(stepnum); position: absolute; left: 0; top: 13px; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+.steps li strong { color: var(--text); font-weight: 500; }
 
-/* INSTRUCTIONS */
-.steps {
-  margin: 32px 0;
-  text-align: left;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
-  padding: 24px;
-}
-.steps h3 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-.steps ol {
-  list-style: none;
-  counter-reset: stepnum;
-}
-.steps li {
-  position: relative;
-  padding: 10px 0 10px 36px;
-  counter-increment: stepnum;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-.steps li::before {
-  content: counter(stepnum);
-  position: absolute;
-  left: 0;
-  top: 12px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--brand-tint);
-  color: var(--brand);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.help { margin: 28px auto 0; padding: 18px 22px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text2); max-width: 540px; }
+.help strong { color: var(--text); }
 
-.footer-help {
-  margin-top: 28px;
-  padding: 20px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-faint);
-  border-radius: 10px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  text-align: center;
-}
-.footer-help strong { color: var(--text-primary); }
+.btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .04em; border: 1px solid transparent; cursor: pointer; transition: all .25s; }
+.btn-ghost { background: transparent; border-color: var(--border2); color: #fff; }
+.btn-ghost:hover { border-color: var(--text3); background: rgba(255,255,255,.04); text-decoration: none; }
+.btn-primary { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; font-weight: 700; box-shadow: 0 0 30px rgba(255,215,0,.2); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(255,215,0,.4); text-decoration: none; }
 
-.btn-row {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 24px;
-}
-.btn {
-  padding: 12px 22px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--border-default);
-  background: var(--bg-panel);
-  color: var(--text-primary);
-  text-decoration: none;
-  display: inline-block;
-}
-.btn:hover { border-color: var(--border-strong); text-decoration: none; }
-.btn-primary {
-  background: var(--brand);
-  color: var(--bg-void);
-  border-color: var(--brand);
-}
-.btn-primary:hover { background: var(--brand-glow); border-color: var(--brand-glow); }
+/* Recovery hint shown if polling is stuck */
+.recovery { display: none; margin: 28px auto 0; max-width: 540px; padding: 22px; background: rgba(34,211,238,.04); border: 1px solid rgba(34,211,238,.25); border-radius: 12px; font-size: 13px; color: var(--text2); text-align: left; }
+.recovery.show { display: block; }
+.recovery strong { color: var(--cyan); }
+.recovery .check-now { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 10px 18px; background: var(--cyan); color: var(--bg); border: none; border-radius: 6px; cursor: pointer; margin-top: 12px; }
+.recovery .check-now:hover { opacity: 0.9; }
+.recovery .check-now:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.state { display: none; }
+.state.show { display: block; }
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="brand">
-      <span class="brand-mark"></span>
-      Limitless
+    <a href="/" class="nav-brand">
+      <div class="nav-mark">
+        <div class="c c1"></div>
+        <div class="lens"></div>
+        <div class="c c2"></div>
+      </div>
+      <div>
+        <div class="nav-wordmark">LIMITLESS</div>
+        <div class="nav-tag">TRADE COPIER</div>
+      </div>
     </a>
   </div>
 </nav>
 
 <main>
-  <!-- WAITING STATE -->
-  <div class="state" id="state-waiting">
+  <!-- WAITING -->
+  <div class="state show" id="state-waiting">
     <div class="spinner"></div>
-    <h1>Confirming your payment</h1>
+    <h1>Confirming your <span class="accent">payment</span></h1>
     <p class="lede">
-      We're waiting for NowPayments to confirm your USDT transaction on the TRON network.
-      This usually takes 30 seconds to 2 minutes after you complete the payment.
-      <strong>Keep this page open</strong> — your license key will appear here automatically.
+      Waiting for NowPayments to confirm your USDT transaction on the TRON network.
+      Usually 30 seconds to 2 minutes. <strong style="color:var(--text)">Keep this page open</strong> — your license key will appear here automatically.
     </p>
-    <div class="status-msg" id="waiting-status">Status: pending</div>
+    <div class="status-msg" id="waiting-status">Status: pending · checking every 3s</div>
     <div class="order-id" id="order-id-waiting">Order: —</div>
-    <div class="footer-help">
-      If this is taking longer than 5 minutes, your transaction may need extra confirmations.
-      You'll still receive an email at the address you provided.
-      Questions? <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a>
+
+    <div class="recovery" id="recovery">
+      <strong>Taking longer than expected?</strong> Your payment may already be confirmed on the server even if this page hasn't caught up. Click below to force-check now, or just check your email — the license arrives there regardless.
+      <br>
+      <button class="check-now" id="forceCheckBtn">Force check now</button>
+    </div>
+
+    <div class="help">
+      If this takes longer than 5 minutes, your transaction may need extra blockchain confirmations. You'll still receive your license by email at the address you provided. Questions? <a href="mailto:support@limitlesscopier.com">support@limitlesscopier.com</a>
     </div>
   </div>
 
-  <!-- SUCCESS STATE (license key visible) -->
-  <div class="state hidden" id="state-paid">
+  <!-- SUCCESS -->
+  <div class="state" id="state-paid">
     <div class="check">✓</div>
-    <h1>You're all set</h1>
-    <p class="lede">
-      Payment confirmed. Your license has been issued and sent to your email.
-    </p>
+    <h1>You're <span class="accent">all set</span>.</h1>
+    <p class="lede">Payment confirmed. Your license has been issued and emailed to you.</p>
 
     <div class="key-panel">
       <div class="key-label">Your License Key</div>
@@ -321,42 +178,37 @@ h1 {
     <div class="steps">
       <h3>How to activate</h3>
       <ol>
-        <li>Download Limitless Trade Copier from your dashboard (link in the email).</li>
+        <li>Download Limitless Trade Copier from your email or the homepage.</li>
         <li>Run the installer and launch the app.</li>
-        <li>When the License dialog opens on first launch, paste the key above and click <strong>Activate</strong>.</li>
-        <li>The license binds to your PC. Need to move it later? Email support.</li>
+        <li>On first launch, paste the key above and click <strong>Activate</strong>.</li>
+        <li>The license binds to your PC. Email support to move it later.</li>
       </ol>
     </div>
 
     <div class="btn-row">
-      <a href="/" class="btn">Back to homepage</a>
+      <a href="/" class="btn btn-ghost">Back to homepage</a>
       <a href="mailto:support@limitlesscopier.com" class="btn btn-primary">Contact support</a>
     </div>
   </div>
 
-  <!-- EXPIRED / FAILED STATE -->
-  <div class="state hidden" id="state-failed">
+  <!-- FAILED -->
+  <div class="state" id="state-failed">
     <div class="x-mark">!</div>
     <h1 id="failed-title">Payment didn't go through</h1>
-    <p class="lede" id="failed-message">
-      Something didn't complete. You haven't been charged.
-    </p>
+    <p class="lede" id="failed-message">Something didn't complete. You haven't been charged.</p>
     <div class="order-id" id="order-id-failed">Order: —</div>
     <div class="btn-row">
       <a href="/checkout.html" class="btn btn-primary">Try again</a>
-      <a href="mailto:support@limitlesscopier.com" class="btn">Contact support</a>
+      <a href="mailto:support@limitlesscopier.com" class="btn btn-ghost">Contact support</a>
     </div>
   </div>
 
-  <!-- NOT FOUND / NO ORDER ID -->
-  <div class="state hidden" id="state-notfound">
+  <!-- NOT FOUND -->
+  <div class="state" id="state-notfound">
     <h1>No order found</h1>
-    <p class="lede">
-      This page expects a valid order ID. If you just completed a payment and landed here
-      without seeing your license, check your email — it should arrive within a few minutes.
-    </p>
+    <p class="lede">This page expects a valid order ID. If you just completed a payment, check your email — the license arrives there within a few minutes regardless.</p>
     <div class="btn-row">
-      <a href="/" class="btn">Back to homepage</a>
+      <a href="/" class="btn btn-ghost">Back to homepage</a>
       <a href="mailto:support@limitlesscopier.com" class="btn btn-primary">Contact support</a>
     </div>
   </div>
@@ -365,41 +217,56 @@ h1 {
 <script>
 const API_BASE = 'https://api.limitlesscopier.com';
 
-// Extract order_id from URL
 const url = new URL(window.location.href);
 const orderId = url.searchParams.get('order_id');
 
+let attempts = 0;
+const MAX_ATTEMPTS = 200;          // ~10 min at 3s polling
+const POLL_MS = 3000;
+const SHOW_RECOVERY_AFTER = 8;     // ~24s — show "force check" if polling hasn't resolved
+
+function setActiveState(id) {
+  ['state-waiting', 'state-paid', 'state-failed', 'state-notfound'].forEach(s => {
+    document.getElementById(s).classList.toggle('show', s === id);
+  });
+}
+
 if (!orderId) {
-  document.getElementById('state-waiting').classList.add('hidden');
-  document.getElementById('state-notfound').classList.remove('hidden');
+  setActiveState('state-notfound');
 } else {
   document.getElementById('order-id-waiting').textContent = 'Order: ' + orderId;
-  document.getElementById('order-id-failed').textContent = 'Order: ' + orderId;
+  document.getElementById('order-id-failed').textContent  = 'Order: ' + orderId;
   pollStatus();
 }
 
-let attempts = 0;
-const MAX_ATTEMPTS = 200;   // ~10 min at 3s polling
-const POLL_MS = 3000;
-
 async function pollStatus() {
-  if (attempts++ >= MAX_ATTEMPTS) {
+  attempts++;
+
+  // Show "force check" hint after ~24s if still waiting
+  if (attempts >= SHOW_RECOVERY_AFTER) {
+    document.getElementById('recovery').classList.add('show');
+  }
+
+  if (attempts > MAX_ATTEMPTS) {
     document.getElementById('waiting-status').textContent =
       'Status: still waiting — check your email or contact support';
     return;
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/checkout/status/${encodeURIComponent(orderId)}`);
-    if (res.status === 404) {
-      showNotFound();
-      return;
-    }
-    if (!res.ok) throw new Error('Status request failed');
+    // cache: 'no-store' to avoid stale 'pending' responses being served from any layer
+    const res = await fetch(`${API_BASE}/api/checkout/status/${encodeURIComponent(orderId)}`, {
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.status === 404) { setActiveState('state-notfound'); return; }
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
     const data = await res.json();
 
     document.getElementById('waiting-status').textContent =
-      'Status: ' + (data.status || 'unknown');
+      'Status: ' + (data.status || 'unknown') + ' · checked ' + attempts + 'x';
 
     switch (data.status) {
       case 'paid':
@@ -412,7 +279,7 @@ async function pollStatus() {
         showFailed('This payment session expired before completion. Please start a new checkout.');
         return;
       case 'partial':
-        showFailed('Underpayment detected. Email support@limitlesscopier.com with this order ID — we can help.');
+        showFailed('Underpayment detected. Email admin@limitlesscopier.com with this order ID — we can help.');
         return;
       case 'pending':
       case 'confirming':
@@ -420,38 +287,50 @@ async function pollStatus() {
         setTimeout(pollStatus, POLL_MS);
         return;
     }
-  } catch {
-    // Transient network error - keep retrying
+  } catch (err) {
+    console.warn('Status poll attempt', attempts, 'failed:', err);
+    if (attempts >= 4) {
+      document.getElementById('waiting-status').textContent =
+        'Status: network issue, retrying (' + attempts + 'x)';
+    }
     setTimeout(pollStatus, POLL_MS);
   }
 }
 
 function showPaid(key) {
-  document.getElementById('state-waiting').classList.add('hidden');
-  document.getElementById('state-paid').classList.remove('hidden');
+  setActiveState('state-paid');
   document.getElementById('license-key').textContent = key || '—';
   const btn = document.getElementById('copy-key-btn');
   btn.addEventListener('click', () => {
+    if (!key) return;
     navigator.clipboard.writeText(key).then(() => {
-      btn.textContent = 'Copied';
+      btn.textContent = 'Copied ✓';
       btn.classList.add('copied');
       setTimeout(() => {
         btn.textContent = 'Copy Key';
         btn.classList.remove('copied');
-      }, 1500);
+      }, 1600);
     });
   });
 }
 
 function showFailed(msg) {
-  document.getElementById('state-waiting').classList.add('hidden');
-  document.getElementById('state-failed').classList.remove('hidden');
+  setActiveState('state-failed');
   document.getElementById('failed-message').textContent = msg;
 }
 
-function showNotFound() {
-  document.getElementById('state-waiting').classList.add('hidden');
-  document.getElementById('state-notfound').classList.remove('hidden');
+const forceBtn = document.getElementById('forceCheckBtn');
+if (forceBtn) {
+  forceBtn.addEventListener('click', () => {
+    const orig = forceBtn.textContent;
+    forceBtn.textContent = 'Checking…';
+    forceBtn.disabled = true;
+    pollStatus();
+    setTimeout(() => {
+      forceBtn.textContent = orig;
+      forceBtn.disabled = false;
+    }, 2000);
+  });
 }
 </script>
 </body>
