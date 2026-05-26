@@ -259,6 +259,10 @@ h1 .accent { color: var(--gold); }
   letter-spacing: .1em;
   text-transform: uppercase;
 }
+#codeHint.valid { color: var(--green); }
+#codeHint.invalid { color: var(--red); }
+#code.valid { border-color: var(--green); }
+#code.invalid { border-color: var(--red); }
 
 /* =============================================================
    PAYMENT METHOD TABS
@@ -623,7 +627,15 @@ h1 .accent { color: var(--gold); }
     </div>
 
     <div class="section">
-      <div class="step-label"><span class="num">3</span>Payment method</div>
+      <div class="step-label"><span class="num">3</span>Discount or affiliate code <span style="font-weight:400;color:var(--text3);font-size:13px;">(optional)</span></div>
+      <div class="field">
+        <input type="text" id="code" placeholder="Enter code" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase;">
+        <div class="hint" id="codeHint">Have a code? Enter it to apply your discount or support a referrer.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="step-label"><span class="num">4</span>Payment method</div>
       <div class="pay-tabs">
         <div class="pay-tab active" data-pay="crypto">
           <span class="ico">⟁</span>
@@ -701,6 +713,7 @@ h1 .accent { color: var(--gold); }
     <div class="summary-row"><span class="l">Plan</span><span class="r" id="sumPlan">3 Months</span></div>
     <div class="summary-row"><span class="l">Payment</span><span class="r" id="sumMethod">USDT (TRC20)</span></div>
     <div class="summary-row"><span class="l">License binding</span><span class="r">Your PC hardware</span></div>
+    <div class="summary-row" id="sumDiscountRow" style="display:none;"><span class="l">Discount</span><span class="r" id="sumDiscountVal" style="color:var(--green);">-$0</span></div>
     <div class="summary-total">
       <span class="l">Total</span>
       <span class="r">
@@ -748,6 +761,10 @@ const state = {
   plan: "3months",
   payMethod: "crypto",
   bankCountry: "pk",
+  code: "",
+  codeValid: false,
+  codeKind: "none",
+  discountUsd: 0,
 };
 
 // Initialize from URL ?plan=1month etc. (deep link from index.html pricing buttons)
@@ -789,8 +806,36 @@ function renderPrices() {
   document.getElementById("sumPlan").textContent = planLabels[state.plan];
   document.getElementById("sumMethod").textContent = cur.label;
   document.getElementById("sumCurrencyPrefix").textContent = cur.currencyPrefix || "";
-  document.getElementById("sumTotal").textContent = formatAmount(cur.amount, cur.currencySuffix);
   document.getElementById("sumCurrencySuffix").textContent = cur.currencySuffix;
+
+  // === ZIP 3: reflect discount in the total when applicable ===
+  // Discounts are computed server-side in USD. They apply cleanly to the
+  // crypto (USD) total. For bank transfers (PKR/AED) we show the original
+  // amount plus a note that the discount is applied at manual verification,
+  // since converting the USD discount into PKR/AED on the fly would risk
+  // showing a number that doesn't match what admin actually charges.
+  let total = cur.amount;
+  const discountRow = document.getElementById("sumDiscountRow");
+  if (state.codeValid && state.codeKind === "discount" && state.discountUsd > 0) {
+    if (state.payMethod === "crypto") {
+      total = Math.max(1, cur.amount - state.discountUsd);
+      if (discountRow) {
+        discountRow.style.display = "";
+        document.getElementById("sumDiscountVal").textContent =
+          "-$" + formatAmount(state.discountUsd, "");
+      }
+    } else {
+      // Bank: keep displayed amount, note the discount applies on verification.
+      if (discountRow) {
+        discountRow.style.display = "";
+        document.getElementById("sumDiscountVal").textContent =
+          "-$" + formatAmount(state.discountUsd, "") + " (applied on verification)";
+      }
+    }
+  } else if (discountRow) {
+    discountRow.style.display = "none";
+  }
+  document.getElementById("sumTotal").textContent = formatAmount(total, cur.currencySuffix);
 }
 
 // Apply initial plan selection (incl. from URL param)
@@ -808,6 +853,8 @@ document.querySelectorAll(".plan-card").forEach(el => {
     document.querySelectorAll(".plan-card").forEach(c =>
       c.classList.toggle("selected", c.dataset.plan === state.plan));
     renderPrices();
+    // Re-check the code against the new plan (discount + min-purchase depend on price)
+    if (codeEl.value.trim()) validateCode();
   });
 });
 
@@ -867,6 +914,74 @@ const cryptoErr = document.getElementById("cryptoError");
 const emailEl   = document.getElementById("email");
 const API_BASE  = "https://api.limitlesscopier.com";
 
+// =========================================================
+// Discount / affiliate code validation
+// =========================================================
+const codeEl   = document.getElementById("code");
+const codeHint = document.getElementById("codeHint");
+
+function resetCodeState() {
+  state.code = "";
+  state.codeValid = false;
+  state.codeKind = "none";
+  state.discountUsd = 0;
+  codeEl.classList.remove("valid", "invalid");
+  codeHint.classList.remove("valid", "invalid");
+  codeHint.textContent = "Have a code? Enter it to apply your discount or support a referrer.";
+  renderPrices();
+}
+
+async function validateCode() {
+  const raw = codeEl.value.trim().toUpperCase();
+  codeEl.value = raw;
+  if (!raw) { resetCodeState(); return; }
+
+  codeHint.classList.remove("valid", "invalid");
+  codeHint.textContent = "Checking code…";
+
+  try {
+    const res = await fetch(`${API_BASE}/api/checkout/validate-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: raw, plan: state.plan }),
+    });
+    const data = await res.json();
+
+    if (data.valid && data.kind !== "none") {
+      state.code = raw;
+      state.codeValid = true;
+      state.codeKind = data.kind;
+      state.discountUsd = data.discountAmountUsd || 0;
+      codeEl.classList.remove("invalid");
+      codeEl.classList.add("valid");
+      codeHint.classList.remove("invalid");
+      codeHint.classList.add("valid");
+      codeHint.textContent = data.message || "Code applied";
+    } else {
+      state.code = "";
+      state.codeValid = false;
+      state.codeKind = "none";
+      state.discountUsd = 0;
+      codeEl.classList.remove("valid");
+      codeEl.classList.add("invalid");
+      codeHint.classList.remove("valid");
+      codeHint.classList.add("invalid");
+      codeHint.textContent = data.message || "That code isn't valid.";
+    }
+  } catch (e) {
+    // Network hiccup — don't block the sale, just clear the code state.
+    resetCodeState();
+    codeHint.textContent = "Couldn't check the code. You can still pay full price.";
+  }
+  renderPrices();
+}
+
+codeEl.addEventListener("blur", validateCode);
+codeEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); codeEl.blur(); }
+});
+
+
 function showCryptoError(msg) {
   cryptoErr.textContent = msg;
   cryptoErr.classList.add("show");
@@ -895,7 +1010,7 @@ cryptoBtn.addEventListener("click", async () => {
     const res = await fetch(`${API_BASE}/api/checkout/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plan, email }),
+      body: JSON.stringify({ plan, email, code: state.codeValid ? state.code : "" }),
     });
     if (!res.ok) {
       const t = await res.text();
