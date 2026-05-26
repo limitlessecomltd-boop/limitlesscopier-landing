@@ -48,6 +48,20 @@ td.r, th.r { text-align: right; }
 .mono { font-family: 'DM Mono', monospace; }
 .hidden { display: none !important; }
 .empty { color: var(--text3); font-size: 13px; padding: 18px 8px; text-align: center; }
+/* Overview dashboard */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 8px; }
+.stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.stat .n { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 1px; color: var(--gold); line-height: 1; }
+.stat .l { font-size: 12px; color: var(--text3); margin-top: 5px; }
+.stat .sub2 { font-size: 11px; color: var(--text2); margin-top: 8px; }
+.ov-section { margin: 26px 0 10px; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 720px) { .split { grid-template-columns: 1fr; } }
+.feed { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.feed h3 { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+.feed-row { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.feed-row:last-child { border-bottom: none; }
+.feed-row .muted { color: var(--text3); font-size: 12px; }
 .tabs { display: flex; gap: 8px; margin-bottom: 18px; }
 .tab { padding: 8px 16px; border-radius: 9px; border: 1px solid var(--border2); cursor: pointer; font-size: 13px; color: var(--text2); }
 .tab.active { background: var(--bg3); color: var(--gold); border-color: var(--gold); }
@@ -74,12 +88,35 @@ td.r, th.r { text-align: right; }
     <p class="sub">Discount codes &amp; affiliate commissions.</p>
 
     <div class="tabs">
-      <div class="tab active" data-tab="discounts">Discount Codes</div>
+      <div class="tab active" data-tab="overview">Overview</div>
+      <div class="tab" data-tab="users">Users</div>
+      <div class="tab" data-tab="discounts">Discount Codes</div>
       <div class="tab" data-tab="commissions">Commissions</div>
+      <div class="tab" data-tab="issue">Issue License</div>
+    </div>
+
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview">
+      <div id="ovBody"><div class="empty">Loading overview…</div></div>
+    </div>
+
+    <!-- USERS TAB -->
+    <div id="tab-users" class="hidden">
+      <h2>All users</h2>
+      <div class="card">
+        <div class="row" style="margin-bottom:14px;">
+          <div><label>Search email / key</label><input type="text" id="uSearch" placeholder="type to filter…"></div>
+          <div><label>Plan</label><select id="uPlan"><option value="">All plans</option><option value="1month">1 Month</option><option value="3months">3 Months</option><option value="yearly">Yearly</option><option value="Lifetime">Lifetime</option></select></div>
+          <div><label>Status</label><select id="uStatus"><option value="">All</option><option value="active">Active</option><option value="expired">Expired</option><option value="revoked">Revoked</option></select></div>
+          <div><label>Activation</label><select id="uAct"><option value="">All</option><option value="yes">Activated</option><option value="no">Not activated</option></select></div>
+        </div>
+        <div id="uCount" class="sub" style="margin-bottom:6px;"></div>
+        <div id="usersList"><div class="empty">Loading…</div></div>
+      </div>
     </div>
 
     <!-- DISCOUNTS TAB -->
-    <div id="tab-discounts">
+    <div id="tab-discounts" class="hidden">
       <h2>Create a discount code</h2>
       <div class="card">
         <div class="row">
@@ -112,6 +149,39 @@ td.r, th.r { text-align: right; }
         <div id="commList"><div class="empty">Loading…</div></div>
       </div>
     </div>
+
+    <!-- ISSUE LICENSE TAB -->
+    <div id="tab-issue" class="hidden">
+      <h2>Issue a license manually</h2>
+      <p class="sub">Mints a key straight into the live server and emails it to the customer. Use this instead of the desktop AdminApp.</p>
+      <div class="card">
+        <div class="row">
+          <div><label>Customer email</label><input type="email" id="ilEmail" placeholder="customer@example.com"></div>
+          <div>
+            <label>Plan</label>
+            <select id="ilPlan">
+              <option value="1month">1 Month (30 days)</option>
+              <option value="3months">3 Months (90 days)</option>
+              <option value="yearly">Yearly (365 days)</option>
+              <option value="Lifetime">Lifetime (no expiry)</option>
+            </select>
+          </div>
+          <div><label>Override days (optional)</label><input type="number" id="ilDays" placeholder="blank = use plan default" min="1"></div>
+        </div>
+        <div style="margin-top:12px;"><label>Notes (internal)</label><input type="text" id="ilNotes" placeholder="e.g. manual comp, replacement for lost key"></div>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:14px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text2);">
+          <input type="checkbox" id="ilEmailToggle" checked style="width:auto;"> Email the license to the customer
+        </label>
+        <button class="btn" id="ilIssueBtn" style="margin-top:14px;">Issue license</button>
+        <div class="err" id="ilErr"></div>
+        <div class="ok hidden" id="ilOk"></div>
+        <div id="ilResult" class="hidden" style="margin-top:14px;padding:14px;background:var(--bg3);border-radius:9px;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Issued key</div>
+          <div class="mono" id="ilKey" style="color:var(--gold);font-size:18px;letter-spacing:.05em;"></div>
+          <div id="ilMeta" style="color:var(--text2);font-size:13px;margin-top:6px;"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -142,8 +212,8 @@ async function unlock() {
     if (!res.ok) throw new Error("Server error");
     $("gate").classList.add("hidden");
     $("panel").classList.remove("hidden");
-    renderDiscounts(await res.json());
-    loadCommissions();
+    renderDiscounts(await res.json());  // pre-cache discounts tab
+    loadOverview();                      // overview is the default tab
   } catch (e) {
     TOKEN = null;
     $("gateErr").textContent = "Couldn't reach the server.";
@@ -239,13 +309,194 @@ async function loadCommissions() {
 $("gateBtn").addEventListener("click", unlock);
 $("tokenInput").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
 $("dcCreateBtn").addEventListener("click", createDiscount);
+$("ilIssueBtn").addEventListener("click", issueLicense);
+["uSearch","uPlan","uStatus","uAct"].forEach(id => {
+  const el = $(id);
+  if (el) el.addEventListener(id === "uSearch" ? "input" : "change", renderUsers);
+});
+// ---------- Overview ----------
+function statCard(n, label, sub) {
+  return `<div class="stat"><div class="n">${n}</div><div class="l">${label}</div>${sub ? `<div class="sub2">${sub}</div>` : ""}</div>`;
+}
+async function loadOverview() {
+  try {
+    const res = await fetch(`${API_BASE}/admin/overview`, { headers: authHeaders(false) });
+    if (!res.ok) throw new Error("Couldn't load overview.");
+    const d = await res.json();
+    const planLabel = { "1month":"1 Month","3months":"3 Months","yearly":"Yearly","Lifetime":"Lifetime" };
+
+    let h = "";
+    // Revenue
+    h += `<div class="ov-section">Revenue</div><div class="stat-grid">`;
+    h += statCard(fmtMoney(d.revenue.allTime), "All-time revenue");
+    h += statCard(fmtMoney(d.revenue.thisMonth), "This month");
+    h += statCard(fmtMoney(d.revenue.last30d), "Last 30 days");
+    h += statCard(`${d.orders.conversionPct}%`, "Conversion", `${d.orders.paid} paid / ${d.orders.total} orders`);
+    h += `</div>`;
+
+    // Revenue by plan
+    if (d.revenue.byPlan && d.revenue.byPlan.length) {
+      h += `<div class="ov-section">Revenue by plan</div><div class="stat-grid">`;
+      for (const p of d.revenue.byPlan) {
+        h += statCard(fmtMoney(p.revenue), planLabel[p.plan] || p.plan, `${p.count} sale${p.count===1?"":"s"}`);
+      }
+      h += `</div>`;
+    }
+
+    // Users / licenses
+    h += `<div class="ov-section">Users &amp; licenses</div><div class="stat-grid">`;
+    h += statCard(d.activeUsers.last24h, "Active now", "heartbeat &lt; 24h");
+    h += statCard(d.activeUsers.last7d, "Active this week", "heartbeat &lt; 7d");
+    h += statCard(d.activeUsers.everActivated, "Ever activated");
+    h += statCard(d.licenses.active, "Active licenses", `${d.licenses.expired} expired · ${d.licenses.revoked} revoked`);
+    h += `</div>`;
+
+    // Affiliates / discounts
+    h += `<div class="ov-section">Affiliates &amp; discounts</div><div class="stat-grid">`;
+    h += statCard(fmtMoney(d.affiliates.owedUsd), "Owed now", "earned, unpaid");
+    h += statCard(fmtMoney(d.affiliates.pendingUsd), "Pending", "in 14-day hold");
+    h += statCard(fmtMoney(d.affiliates.paidUsd), "Paid out (lifetime)");
+    h += statCard(`${d.affiliates.withCode}/${d.affiliates.total}`, "Affiliates with a code");
+    h += statCard(d.discounts.active, "Active discount codes", `${d.discounts.totalRedemptions} redemptions`);
+    h += `</div>`;
+
+    // Feeds
+    h += `<div class="split" style="margin-top:24px;">`;
+    // Recent paid orders
+    h += `<div class="feed"><h3>Recent sales</h3>`;
+    if (!d.recentOrders.length) h += `<div class="empty">No paid orders yet.</div>`;
+    else for (const o of d.recentOrders) {
+      h += `<div class="feed-row"><span>${o.email}<br><span class="muted">${planLabel[o.plan]||o.plan}${o.appliedCode ? " · "+o.appliedCode : ""}</span></span><span style="text-align:right;">${fmtMoney(o.amountUsd)}<br><span class="muted">${fmtDate(o.paidAt)}</span></span></div>`;
+    }
+    h += `</div>`;
+    // Recent activations
+    h += `<div class="feed"><h3>Recent activations</h3>`;
+    if (!d.recentActivations.length) h += `<div class="empty">No activations yet.</div>`;
+    else for (const a of d.recentActivations) {
+      h += `<div class="feed-row"><span>${a.email}<br><span class="muted mono">${a.machineShort||"—"}</span></span><span style="text-align:right;" class="muted">first ${fmtDate(a.firstSeenAt)}<br>seen ${fmtDate(a.lastHeartbeatAt)}</span></div>`;
+    }
+    h += `</div></div>`;
+
+    // Top affiliates
+    if (d.affiliates.top && d.affiliates.top.length) {
+      h += `<div class="ov-section">Top affiliates</div><div class="feed">`;
+      for (const t of d.affiliates.top) {
+        h += `<div class="feed-row"><span class="mono" style="color:var(--gold);">${t.code}</span><span style="text-align:right;">${fmtMoney(t.earned)} earned<br><span class="muted">${fmtMoney(t.paid)} paid</span></span></div>`;
+      }
+      h += `</div>`;
+    }
+
+    $("ovBody").innerHTML = h;
+  } catch (e) {
+    $("ovBody").innerHTML = `<div class="empty">${e.message}</div>`;
+  }
+}
+
+// ---------- Users ----------
+let ALL_USERS = [];
+async function loadUsers() {
+  try {
+    const res = await fetch(`${API_BASE}/admin/users`, { headers: authHeaders(false) });
+    if (!res.ok) throw new Error("Couldn't load users.");
+    ALL_USERS = await res.json();
+    renderUsers();
+  } catch (e) {
+    $("usersList").innerHTML = `<div class="empty">${e.message}</div>`;
+  }
+}
+function renderUsers() {
+  const q = $("uSearch").value.trim().toLowerCase();
+  const plan = $("uPlan").value;
+  const status = $("uStatus").value;
+  const act = $("uAct").value;
+  const planLabel = { "1month":"1 Month","3months":"3 Months","yearly":"Yearly","Lifetime":"Lifetime" };
+
+  let rows = ALL_USERS.filter(u => {
+    if (q && !((u.email||"").toLowerCase().includes(q) || (u.licenseKey||"").toLowerCase().includes(q))) return false;
+    if (plan && u.plan !== plan) return false;
+    if (status && u.status !== status) return false;
+    if (act === "yes" && !u.isActivated) return false;
+    if (act === "no" && u.isActivated) return false;
+    return true;
+  });
+
+  $("uCount").textContent = `${rows.length} of ${ALL_USERS.length} users`;
+  if (!rows.length) { $("usersList").innerHTML = `<div class="empty">No matching users.</div>`; return; }
+
+  let h = `<table><thead><tr><th>Email</th><th>Plan</th><th>Status</th><th>Activated</th><th>Last seen</th><th>Created</th><th>Key</th></tr></thead><tbody>`;
+  for (const u of rows.slice(0, 300)) {
+    h += `<tr>
+      <td>${u.email}</td>
+      <td>${planLabel[u.plan]||u.plan}</td>
+      <td><span class="pill ${u.status==="active"?"on":u.status==="revoked"?"off":"pending"}">${u.status.toUpperCase()}</span></td>
+      <td>${u.isActivated ? `<span class="mono" style="color:var(--text2);">${u.machineShort||"yes"}</span>` : `<span class="muted">—</span>`}</td>
+      <td class="muted">${u.lastHeartbeatAt ? fmtDate(u.lastHeartbeatAt) : "—"}</td>
+      <td class="muted">${fmtDate(u.createdAt)}</td>
+      <td class="mono" style="font-size:11px;color:var(--text3);">${u.licenseKey}</td>
+    </tr>`;
+  }
+  h += `</tbody></table>`;
+  if (rows.length > 300) h += `<div class="sub" style="margin-top:8px;">Showing first 300 of ${rows.length}. Narrow your filter to see more.</div>`;
+  $("usersList").innerHTML = h;
+}
+
+// ---------- Issue License ----------
+async function issueLicense() {
+  $("ilErr").textContent = ""; $("ilOk").classList.add("hidden"); $("ilResult").classList.add("hidden");
+  const email = $("ilEmail").value.trim();
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { $("ilErr").textContent = "Enter a valid email."; return; }
+  const plan = $("ilPlan").value;
+  const daysRaw = $("ilDays").value.trim();
+  const body = {
+    email,
+    plan,
+    days: daysRaw ? parseInt(daysRaw) : null,
+    notes: $("ilNotes").value.trim() || null,
+  };
+  const btn = $("ilIssueBtn"); btn.disabled = true; btn.textContent = "Issuing…";
+  try {
+    const res = await fetch(`${API_BASE}/admin/keys/issue`, {
+      method: "POST", headers: authHeaders(true), body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Issue failed.");
+
+    const key = data.licenseKey;
+    $("ilKey").textContent = key;
+    let meta = `${data.email} · ${data.plan}`;
+    meta += data.expiresAt ? ` · expires ${fmtDate(data.expiresAt)}` : " · no expiry";
+    $("ilResult").classList.remove("hidden");
+
+    // Optionally email the key to the customer via the resend-license endpoint
+    // (the issue endpoint mints but doesn't email; resend-license sends to the
+    //  address on file, which is the email we just used).
+    if ($("ilEmailToggle").checked) {
+      const er = await fetch(`${API_BASE}/api/dashboard/${encodeURIComponent(key)}/resend-license`, { method: "POST" });
+      if (er.ok) { meta += " · emailed ✓"; }
+      else { meta += " · (mint OK, email failed — send manually)"; }
+    }
+    $("ilMeta").textContent = meta;
+    $("ilOk").textContent = "License issued into the live server."; $("ilOk").classList.remove("hidden");
+    ["ilEmail","ilDays","ilNotes"].forEach(id => $(id).value = "");
+  } catch (e) {
+    $("ilErr").textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = "Issue license";
+  }
+}
+
 document.querySelectorAll(".tab").forEach(t => {
   t.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
     t.classList.add("active");
     const which = t.dataset.tab;
+    $("tab-overview").classList.toggle("hidden", which !== "overview");
+    $("tab-users").classList.toggle("hidden", which !== "users");
     $("tab-discounts").classList.toggle("hidden", which !== "discounts");
     $("tab-commissions").classList.toggle("hidden", which !== "commissions");
+    $("tab-issue").classList.toggle("hidden", which !== "issue");
+    if (which === "overview") loadOverview();
+    if (which === "users" && ALL_USERS.length === 0) loadUsers();
     if (which === "commissions") loadCommissions();
   });
 });
