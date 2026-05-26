@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Limitless Trade Copier</title>
+<meta name="description" content="Manage your Limitless Trade Copier license, view your affiliate earnings, and claim your referral code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #FFD700; --gold2: #FFA500; --green: #22C55E; --red: #EF4444; --cyan: #22D3EE;
+  --bg: #030508; --bg2: #080d15; --bg3: #0d1525; --bg4: #121b2e;
+  --text: #fff; --text2: rgba(255,255,255,.65); --text3: rgba(255,255,255,.40); --text4: rgba(255,255,255,.20);
+  --border: rgba(255,255,255,.08); --border2: rgba(255,255,255,.14); --gold-glow: rgba(255,215,0,.25);
+  --max: 900px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
+a { color: var(--gold); text-decoration: none; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 32px 20px 80px; }
+
+/* Header */
+.top { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+.nav-mark { display: flex; align-items: center; gap: 5px; }
+.nav-mark .c1 { width: 9px; height: 9px; border-radius: 50%; background: var(--green); }
+.nav-mark .lens { width: 26px; height: 5px; border-radius: 3px; background: var(--gold); }
+.nav-mark .c2 { width: 9px; height: 9px; border-radius: 50%; background: var(--red); }
+.wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; }
+.tag { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .15em; color: var(--gold); }
+
+/* Login */
+.login-card { max-width: 420px; margin: 60px auto 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 36px; }
+.login-card h1 { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 1px; margin-bottom: 8px; }
+.login-card p { color: var(--text2); font-size: 14px; margin-bottom: 24px; }
+.field label { display: block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+input[type=text] {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2); color: var(--text);
+  padding: 13px 14px; border-radius: 10px; font-size: 15px; font-family: 'DM Mono', monospace; letter-spacing: .05em;
+}
+input[type=text]:focus { outline: none; border-color: var(--gold); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #1a1205;
+  font-weight: 700; font-size: 15px; padding: 13px 22px; border: none; border-radius: 10px;
+  cursor: pointer; width: 100%; margin-top: 16px; transition: transform .1s, opacity .2s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:disabled { opacity: .55; cursor: default; transform: none; }
+.btn.loading { opacity: .7; cursor: default; }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text); width: auto; padding: 9px 16px; font-size: 13px; font-weight: 500; margin: 0; }
+.btn-ghost:hover { border-color: var(--gold); }
+.err { color: var(--red); font-size: 13px; margin-top: 12px; min-height: 18px; }
+
+/* Dashboard */
+.hidden { display: none !important; }
+.dash-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+.dash-head h1 { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 1px; }
+.dash-head .sub { color: var(--text2); font-size: 14px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+.card h2 { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+.kv { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.kv:last-child { border-bottom: none; }
+.kv .k { color: var(--text2); }
+.kv .v { font-weight: 600; text-align: right; }
+.mono { font-family: 'DM Mono', monospace; letter-spacing: .03em; }
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: .05em; }
+.pill.active { background: rgba(34,197,94,.15); color: var(--green); }
+.pill.expired, .pill.revoked { background: rgba(239,68,68,.15); color: var(--red); }
+.pill.pending { background: rgba(255,215,0,.15); color: var(--gold); }
+.pill.earned { background: rgba(34,197,94,.15); color: var(--green); }
+.pill.paid { background: rgba(34,211,238,.15); color: var(--cyan); }
+.pill.cancelled { background: rgba(255,255,255,.10); color: var(--text3); }
+
+.big-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 1px; color: var(--gold); line-height: 1; }
+.big-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* Affiliate section */
+.aff-code-box { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1px dashed var(--border2); border-radius: 10px; padding: 12px 14px; margin-top: 6px; }
+.aff-code-box .code { font-family: 'DM Mono', monospace; font-size: 18px; color: var(--gold); letter-spacing: .05em; flex: 1; }
+.claim-row { display: flex; gap: 10px; margin-top: 10px; }
+.claim-row input { flex: 1; }
+.claim-row .btn { width: auto; margin: 0; padding: 0 18px; white-space: nowrap; }
+.hint { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-top: 8px; }
+.hint.ok { color: var(--green); }
+.hint.bad { color: var(--red); }
+.share { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-size: 13px; color: var(--text2); word-break: break-all; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+th, td { text-align: left; padding: 10px 8px; font-size: 13px; border-bottom: 1px solid var(--border); }
+th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); font-weight: 500; }
+td.r, th.r { text-align: right; }
+.empty { color: var(--text3); font-size: 13px; padding: 20px 8px; text-align: center; }
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.note { font-size: 12px; color: var(--text3); margin-top: 10px; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--bg4); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 18px; font-size: 14px; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="nav-mark"><span class="c1"></span><span class="lens"></span><span class="c2"></span></div>
+    <div>
+      <div class="wordmark">LIMITLESS</div>
+      <div class="tag">TRADE COPIER</div>
+    </div>
+  </div>
+
+  <!-- ===== LOGIN VIEW ===== -->
+  <div id="loginView">
+    <div class="login-card">
+      <h1>Your Dashboard</h1>
+      <p>Enter your license key to manage your license and affiliate earnings. It's in your license delivery email.</p>
+      <div class="field">
+        <label>License Key</label>
+        <input type="text" id="keyInput" placeholder="LTC-XXXX-XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase;">
+      </div>
+      <button class="btn" id="loginBtn">View Dashboard</button>
+      <div class="err" id="loginErr"></div>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD VIEW ===== -->
+  <div id="dashView" class="hidden">
+    <div class="dash-head">
+      <div>
+        <h1>Dashboard</h1>
+        <div class="sub" id="dashEmail"></div>
+      </div>
+      <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+    </div>
+
+    <div class="cards">
+      <!-- License card -->
+      <div class="card">
+        <h2>License</h2>
+        <div class="kv"><span class="k">Status</span><span class="v" id="licStatus"></span></div>
+        <div class="kv"><span class="k">Plan</span><span class="v" id="licPlan"></span></div>
+        <div class="kv"><span class="k">Key</span><span class="v mono" id="licKey" style="font-size:12px;"></span></div>
+        <div class="kv"><span class="k">Expires</span><span class="v" id="licExpires"></span></div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="resendBtn">Resend license email</button>
+        </div>
+        <div class="note" id="resendNote"></div>
+      </div>
+
+      <!-- Activation card -->
+      <div class="card">
+        <h2>Activation</h2>
+        <div id="activationBody"></div>
+      </div>
+    </div>
+
+    <!-- Affiliate card -->
+    <div class="card" style="margin-bottom:24px;">
+      <h2>Affiliate Program — earn 20% per referral</h2>
+
+      <div id="affNoCode">
+        <p style="color:var(--text2);font-size:14px;margin-bottom:4px;">Claim your referral code. Share it at checkout and earn 20% of every sale. Locked once chosen.</p>
+        <div class="claim-row">
+          <input type="text" id="slugInput" placeholder="yourcode" autocomplete="off" autocapitalize="none" spellcheck="false" style="text-transform:lowercase;">
+          <button class="btn" id="claimBtn">Claim</button>
+        </div>
+        <div class="hint" id="slugHint">3-24 characters, letters/digits/dash/underscore, starts with a letter.</div>
+      </div>
+
+      <div id="affHasCode" class="hidden">
+        <p style="color:var(--text2);font-size:13px;">Your referral code — share it; buyers enter it at checkout:</p>
+        <div class="aff-code-box">
+          <span class="code" id="affCode"></span>
+          <button class="btn btn-ghost" id="copyCodeBtn">Copy</button>
+        </div>
+        <div class="share">Share link: <span id="affLink"></span></div>
+      </div>
+
+      <div class="cards" style="margin-top:20px;">
+        <div class="card" style="background:var(--bg3);">
+          <div class="big-num" id="statEarned">$0</div>
+          <div class="big-sub">Total earned (lifetime)</div>
+        </div>
+        <div class="card" style="background:var(--bg3);">
+          <div class="big-num" id="statPending">$0</div>
+          <div class="big-sub">Available to withdraw (earned, unpaid)</div>
+        </div>
+        <div class="card" style="background:var(--bg3);">
+          <div class="big-num" id="statReferrals">0</div>
+          <div class="big-sub">Total referrals</div>
+        </div>
+      </div>
+
+      <div class="note" id="payoutNote"></div>
+    </div>
+
+    <!-- Referrals table -->
+    <div class="card">
+      <h2>Recent Referrals</h2>
+      <div id="referralsBody"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = "https://api.limitlesscopier.com";
+const $ = (id) => document.getElementById(id);
+
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function fmtMoney(n) {
+  const v = Number(n || 0);
+  return "$" + (v % 1 === 0 ? v.toFixed(0) : v.toFixed(2));
+}
+function fmtDate(s) {
+  if (!s) return "—";
+  const d = new Date(s);
+  if (isNaN(d)) return "—";
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
+let currentKey = null;
+
+// ---------- Login ----------
+async function loadDashboard(key) {
+  $("loginErr").textContent = "";
+  const btn = $("loginBtn");
+  btn.disabled = true; btn.classList.add("loading"); btn.textContent = "Loading…";
+  try {
+    const res = await fetch(`${API_BASE}/api/dashboard/${encodeURIComponent(key)}`);
+    if (res.status === 404) throw new Error("License not found. Check the key and try again.");
+    if (!res.ok) throw new Error("Couldn't load the dashboard. Please try again.");
+    const data = await res.json();
+    currentKey = key;
+    render(data);
+    $("loginView").classList.add("hidden");
+    $("dashView").classList.remove("hidden");
+  } catch (e) {
+    $("loginErr").textContent = e.message || "Something went wrong.";
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading"); btn.textContent = "View Dashboard";
+  }
+}
+
+function render(data) {
+  const lic = data.license || {};
+  const act = data.activation;
+  const aff = data.affiliate || {};
+
+  // License
+  $("dashEmail").textContent = lic.email || "";
+  $("licStatus").innerHTML = `<span class="pill ${lic.status}">${(lic.status||"").toUpperCase()}</span>`;
+  $("licPlan").textContent = ({ "1month":"1 Month","3months":"3 Months","yearly":"Yearly" }[lic.plan]) || lic.plan || "—";
+  $("licKey").textContent = lic.key || "—";
+  $("licExpires").textContent = lic.expiresAt
+    ? `${fmtDate(lic.expiresAt)}${lic.daysRemaining != null ? ` (${lic.daysRemaining}d left)` : ""}`
+    : "No expiry";
+
+  // Activation
+  if (act) {
+    $("activationBody").innerHTML =
+      `<div class="kv"><span class="k">Machine</span><span class="v mono">${act.machineShort || "—"}</span></div>` +
+      `<div class="kv"><span class="k">First seen</span><span class="v">${fmtDate(act.firstSeenAt)}</span></div>` +
+      `<div class="kv"><span class="k">Last heartbeat</span><span class="v">${fmtDate(act.lastHeartbeatAt)}</span></div>`;
+  } else {
+    $("activationBody").innerHTML = `<p style="color:var(--text3);font-size:13px;padding:8px 0;">Not activated yet. Activate from inside the app with your license key.</p>`;
+  }
+
+  // Affiliate
+  if (aff.code) {
+    $("affNoCode").classList.add("hidden");
+    $("affHasCode").classList.remove("hidden");
+    $("affCode").textContent = aff.code;
+    $("affLink").textContent = `limitlesscopier.com/checkout.html (enter code: ${aff.code})`;
+  } else {
+    $("affNoCode").classList.remove("hidden");
+    $("affHasCode").classList.add("hidden");
+  }
+  $("statEarned").textContent = fmtMoney(aff.totalEarnedUsd);
+  $("statPending").textContent = fmtMoney(aff.pendingBalanceUsd);
+  $("statReferrals").textContent = aff.totalReferrals != null ? aff.totalReferrals : 0;
+  $("payoutNote").textContent = aff.payoutInstructions || "";
+
+  // Referrals table
+  const refs = data.recentReferrals || [];
+  if (refs.length === 0) {
+    $("referralsBody").innerHTML = `<div class="empty">No referrals yet. Share your code to start earning.</div>`;
+  } else {
+    let html = `<table><thead><tr><th>Plan</th><th>Date</th><th class="r">Sale</th><th class="r">Your cut</th><th class="r">Status</th></tr></thead><tbody>`;
+    for (const r of refs) {
+      html += `<tr>
+        <td>${({ "1month":"1 Month","3months":"3 Months","yearly":"Yearly" }[r.plan]) || r.plan}</td>
+        <td>${fmtDate(r.paidAt)}</td>
+        <td class="r">${fmtMoney(r.orderAmountUsd)}</td>
+        <td class="r">${fmtMoney(r.commissionAmountUsd)}</td>
+        <td class="r"><span class="pill ${r.status}">${(r.status||"").toUpperCase()}</span></td>
+      </tr>`;
+    }
+    html += `</tbody></table>`;
+    $("referralsBody").innerHTML = html;
+  }
+}
+
+// ---------- Claim slug ----------
+async function claimSlug() {
+  const slug = $("slugInput").value.trim().toLowerCase();
+  const hint = $("slugHint");
+  hint.classList.remove("ok", "bad");
+  if (!slug) { hint.classList.add("bad"); hint.textContent = "Enter a code first."; return; }
+  const btn = $("claimBtn");
+  btn.disabled = true; btn.classList.add("loading"); btn.textContent = "…";
+  try {
+    const res = await fetch(`${API_BASE}/api/dashboard/${encodeURIComponent(currentKey)}/claim-code`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: slug }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Couldn't claim that code.");
+    hint.classList.add("ok"); hint.textContent = "Claimed!";
+    toast("Referral code claimed");
+    await loadDashboard(currentKey);
+  } catch (e) {
+    hint.classList.add("bad"); hint.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading"); btn.textContent = "Claim";
+  }
+}
+
+// ---------- Resend ----------
+async function resendLicense() {
+  const btn = $("resendBtn");
+  btn.disabled = true; btn.classList.add("loading"); btn.textContent = "Sending…";
+  $("resendNote").textContent = "";
+  try {
+    const res = await fetch(`${API_BASE}/api/dashboard/${encodeURIComponent(currentKey)}/resend-license`, { method: "POST" });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || data.detail || "Couldn't resend.");
+    $("resendNote").style.color = "var(--green)";
+    $("resendNote").textContent = data.message || "Sent. Check your inbox.";
+    toast("License email sent");
+  } catch (e) {
+    $("resendNote").style.color = "var(--red)";
+    $("resendNote").textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading"); btn.textContent = "Resend license email";
+  }
+}
+
+// ---------- Wiring ----------
+$("loginBtn").addEventListener("click", () => {
+  const key = $("keyInput").value.trim().toUpperCase();
+  if (!key) { $("loginErr").textContent = "Enter your license key."; return; }
+  loadDashboard(key);
+});
+$("keyInput").addEventListener("keydown", (e) => { if (e.key === "Enter") $("loginBtn").click(); });
+$("logoutBtn").addEventListener("click", () => {
+  currentKey = null;
+  $("keyInput").value = "";
+  $("dashView").classList.add("hidden");
+  $("loginView").classList.remove("hidden");
+});
+$("claimBtn").addEventListener("click", claimSlug);
+$("slugInput").addEventListener("keydown", (e) => { if (e.key === "Enter") claimSlug(); });
+$("resendBtn").addEventListener("click", resendLicense);
+$("copyCodeBtn").addEventListener("click", () => {
+  const code = $("affCode").textContent;
+  navigator.clipboard.writeText(code).then(() => toast("Code copied"));
+});
+
+// Deep-link support: ?key=LTC-...
+(function () {
+  const p = new URLSearchParams(location.search).get("key");
+  if (p) { $("keyInput").value = p.toUpperCase(); loadDashboard(p.toUpperCase()); }
+})();
+</script>
+</body>
+</html>

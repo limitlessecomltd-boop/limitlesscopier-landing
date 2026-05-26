@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Limitless</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #FFD700; --gold2: #FFA500; --green: #22C55E; --red: #EF4444; --cyan: #22D3EE;
+  --bg: #030508; --bg2: #080d15; --bg3: #0d1525; --bg4: #121b2e;
+  --text: #fff; --text2: rgba(255,255,255,.65); --text3: rgba(255,255,255,.40);
+  --border: rgba(255,255,255,.08); --border2: rgba(255,255,255,.14);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+h1 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 1px; margin-bottom: 4px; }
+h2 { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 28px 0 12px; }
+.sub { color: var(--text3); font-size: 13px; margin-bottom: 20px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+label { display: block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin: 0 0 6px; }
+input, select {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2); color: var(--text);
+  padding: 11px 12px; border-radius: 9px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+}
+input:focus, select:focus { outline: none; border-color: var(--gold); }
+.btn { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #1a1205; font-weight: 700; font-size: 14px; padding: 11px 18px; border: none; border-radius: 9px; cursor: pointer; }
+.btn:hover { transform: translateY(-1px); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text); font-weight: 500; }
+.btn-ghost:hover { border-color: var(--gold); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.err { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 16px; }
+.ok { color: var(--green); font-size: 13px; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+th, td { text-align: left; padding: 9px 8px; font-size: 13px; border-bottom: 1px solid var(--border); }
+th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); font-weight: 500; }
+td.r, th.r { text-align: right; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; font-family: 'DM Mono', monospace; }
+.pill.on, .pill.earned { background: rgba(34,197,94,.15); color: var(--green); }
+.pill.off, .pill.cancelled { background: rgba(239,68,68,.15); color: var(--red); }
+.pill.pending { background: rgba(255,215,0,.15); color: var(--gold); }
+.pill.paid { background: rgba(34,211,238,.15); color: var(--cyan); }
+.mono { font-family: 'DM Mono', monospace; }
+.hidden { display: none !important; }
+.empty { color: var(--text3); font-size: 13px; padding: 18px 8px; text-align: center; }
+.tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.tab { padding: 8px 16px; border-radius: 9px; border: 1px solid var(--border2); cursor: pointer; font-size: 13px; color: var(--text2); }
+.tab.active { background: var(--bg3); color: var(--gold); border-color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Token gate -->
+  <div id="gate">
+    <h1>Admin Access</h1>
+    <p class="sub">Enter the admin bearer token. It stays in this tab's memory only — never stored.</p>
+    <div class="card" style="max-width:440px;">
+      <label>Bearer Token</label>
+      <input type="password" id="tokenInput" placeholder="paste admin token" autocomplete="off">
+      <button class="btn" id="gateBtn" style="margin-top:14px;width:100%;">Unlock</button>
+      <div class="err" id="gateErr"></div>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div id="panel" class="hidden">
+    <h1>Limitless Admin</h1>
+    <p class="sub">Discount codes &amp; affiliate commissions.</p>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="discounts">Discount Codes</div>
+      <div class="tab" data-tab="commissions">Commissions</div>
+    </div>
+
+    <!-- DISCOUNTS TAB -->
+    <div id="tab-discounts">
+      <h2>Create a discount code</h2>
+      <div class="card">
+        <div class="row">
+          <div><label>Code</label><input type="text" id="dcCode" placeholder="LAUNCH20" style="text-transform:uppercase;"></div>
+          <div><label>Percent off (1-100)</label><input type="number" id="dcPercent" placeholder="20" min="0" max="100"></div>
+          <div><label>OR Flat off (USD)</label><input type="number" id="dcFlat" placeholder="0" min="0" step="0.01"></div>
+        </div>
+        <div class="row" style="margin-top:12px;">
+          <div><label>Max uses (blank = ∞)</label><input type="number" id="dcMax" placeholder="" min="1"></div>
+          <div><label>Expires (blank = never)</label><input type="date" id="dcExpires"></div>
+          <div><label>Min purchase USD (blank = none)</label><input type="number" id="dcMin" placeholder="" min="0" step="0.01"></div>
+        </div>
+        <div style="margin-top:12px;"><label>Notes (internal)</label><input type="text" id="dcNotes" placeholder="Q2 launch promo"></div>
+        <button class="btn" id="dcCreateBtn" style="margin-top:14px;">Create code</button>
+        <div class="err" id="dcErr"></div>
+        <div class="ok hidden" id="dcOk"></div>
+      </div>
+
+      <h2>Existing codes</h2>
+      <div class="card">
+        <div id="dcList"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- COMMISSIONS TAB -->
+    <div id="tab-commissions" class="hidden">
+      <h2>Affiliate commissions</h2>
+      <p class="sub">Only "earned" commissions (past the 14-day hold) can be marked paid.</p>
+      <div class="card">
+        <div id="commList"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = "https://api.limitlesscopier.com";
+const $ = (id) => document.getElementById(id);
+let TOKEN = null;
+
+function authHeaders(json) {
+  const h = { "Authorization": "Bearer " + TOKEN };
+  if (json) h["Content-Type"] = "application/json";
+  return h;
+}
+function fmtMoney(n){ const v=Number(n||0); return "$"+(v%1===0?v.toFixed(0):v.toFixed(2)); }
+function fmtDate(s){ if(!s) return "—"; const d=new Date(s); return isNaN(d)?"—":d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}); }
+
+// ---------- Gate ----------
+async function unlock() {
+  const t = $("tokenInput").value.trim();
+  $("gateErr").textContent = "";
+  if (!t) { $("gateErr").textContent = "Enter the token."; return; }
+  TOKEN = t;
+  // Probe with a GET that requires auth
+  try {
+    const res = await fetch(`${API_BASE}/admin/discounts`, { headers: authHeaders(false) });
+    if (res.status === 401) { TOKEN = null; $("gateErr").textContent = "Invalid token."; return; }
+    if (!res.ok) throw new Error("Server error");
+    $("gate").classList.add("hidden");
+    $("panel").classList.remove("hidden");
+    renderDiscounts(await res.json());
+    loadCommissions();
+  } catch (e) {
+    TOKEN = null;
+    $("gateErr").textContent = "Couldn't reach the server.";
+  }
+}
+
+// ---------- Discounts ----------
+async function loadDiscounts() {
+  const res = await fetch(`${API_BASE}/admin/discounts`, { headers: authHeaders(false) });
+  renderDiscounts(await res.json());
+}
+function renderDiscounts(rows) {
+  if (!rows || rows.length === 0) { $("dcList").innerHTML = `<div class="empty">No discount codes yet.</div>`; return; }
+  let h = `<table><thead><tr><th>Code</th><th>Discount</th><th class="r">Used</th><th>Expires</th><th>Min</th><th>Status</th><th class="r">Action</th></tr></thead><tbody>`;
+  for (const d of rows) {
+    const disc = d.discountPercent > 0 ? `${d.discountPercent}%` : fmtMoney(d.discountFlatUsd);
+    const used = d.maxUses != null ? `${d.usedCount}/${d.maxUses}` : `${d.usedCount}/∞`;
+    h += `<tr>
+      <td class="mono" style="color:var(--gold);">${d.code}</td>
+      <td>${disc}</td>
+      <td class="r">${used}</td>
+      <td>${d.expiresAt ? fmtDate(d.expiresAt) : "Never"}</td>
+      <td>${d.minPurchaseUsd ? fmtMoney(d.minPurchaseUsd) : "—"}</td>
+      <td><span class="pill ${d.enabled ? "on" : "off"}">${d.enabled ? "ENABLED" : "DISABLED"}</span></td>
+      <td class="r"><button class="btn btn-ghost btn-sm" data-toggle="${d.id}" data-enabled="${d.enabled}">${d.enabled ? "Disable" : "Enable"}</button></td>
+    </tr>`;
+  }
+  h += `</tbody></table>`;
+  $("dcList").innerHTML = h;
+  $("dcList").querySelectorAll("[data-toggle]").forEach(btn => {
+    btn.addEventListener("click", () => toggleDiscount(btn.dataset.toggle, btn.dataset.enabled !== "true"));
+  });
+}
+async function createDiscount() {
+  $("dcErr").textContent = ""; $("dcOk").classList.add("hidden");
+  const body = {
+    code: $("dcCode").value.trim().toUpperCase(),
+    discountPercent: parseInt($("dcPercent").value) || 0,
+    discountFlatUsd: parseFloat($("dcFlat").value) || 0,
+    maxUses: $("dcMax").value ? parseInt($("dcMax").value) : null,
+    expiresAt: $("dcExpires").value ? new Date($("dcExpires").value).toISOString() : null,
+    minPurchaseUsd: $("dcMin").value ? parseFloat($("dcMin").value) : null,
+    notes: $("dcNotes").value.trim() || null,
+  };
+  const btn = $("dcCreateBtn"); btn.disabled = true;
+  try {
+    const res = await fetch(`${API_BASE}/admin/discounts`, { method: "POST", headers: authHeaders(true), body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Create failed.");
+    $("dcOk").textContent = `Created ${data.code}`; $("dcOk").classList.remove("hidden");
+    ["dcCode","dcPercent","dcFlat","dcMax","dcExpires","dcMin","dcNotes"].forEach(id => $(id).value = "");
+    loadDiscounts();
+  } catch (e) { $("dcErr").textContent = e.message; }
+  finally { btn.disabled = false; }
+}
+async function toggleDiscount(id, enable) {
+  await fetch(`${API_BASE}/admin/discounts/${id}/update`, { method: "POST", headers: authHeaders(true), body: JSON.stringify({ enabled: enable }) });
+  loadDiscounts();
+}
+
+// ---------- Commissions ----------
+async function loadCommissions() {
+  const res = await fetch(`${API_BASE}/admin/commissions`, { headers: authHeaders(false) });
+  const rows = await res.json();
+  if (!rows || rows.length === 0) { $("commList").innerHTML = `<div class="empty">No commissions yet.</div>`; return; }
+  let h = `<table><thead><tr><th>Code</th><th>Affiliate email</th><th>Plan</th><th>Date</th><th class="r">Sale</th><th class="r">Commission</th><th>Status</th><th class="r">Action</th></tr></thead><tbody>`;
+  for (const c of rows) {
+    const canPay = c.status === "earned";
+    h += `<tr>
+      <td class="mono" style="color:var(--gold);">${c.affiliateCode || "—"}</td>
+      <td>${c.affiliateEmail || "—"}</td>
+      <td>${c.plan}</td>
+      <td>${fmtDate(c.paidAt)}</td>
+      <td class="r">${fmtMoney(c.orderAmountUsd)}</td>
+      <td class="r">${fmtMoney(c.commissionAmountUsd)}</td>
+      <td><span class="pill ${c.status}">${(c.status||"").toUpperCase()}</span></td>
+      <td class="r">${canPay ? `<button class="btn btn-ghost btn-sm" data-pay="${c.id}">Mark paid</button>` : "—"}</td>
+    </tr>`;
+  }
+  h += `</tbody></table>`;
+  $("commList").innerHTML = h;
+  $("commList").querySelectorAll("[data-pay]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      const notes = prompt("Payout notes (e.g. 'USDT TRC20 tx 0xabc…'):") || "";
+      await fetch(`${API_BASE}/admin/commissions/${btn.dataset.pay}/mark-paid`, { method: "POST", headers: authHeaders(true), body: JSON.stringify({ notes }) });
+      loadCommissions();
+    });
+  });
+}
+
+// ---------- Wiring ----------
+$("gateBtn").addEventListener("click", unlock);
+$("tokenInput").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+$("dcCreateBtn").addEventListener("click", createDiscount);
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    const which = t.dataset.tab;
+    $("tab-discounts").classList.toggle("hidden", which !== "discounts");
+    $("tab-commissions").classList.toggle("hidden", which !== "commissions");
+    if (which === "commissions") loadCommissions();
+  });
+});
+</script>
+</body>
+</html>
