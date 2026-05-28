@@ -178,7 +178,7 @@ h1 .accent { color: var(--gold); }
     <div class="steps">
       <h3>How to activate</h3>
       <ol>
-        <li>Download Limitless Trade Copier from your email or the homepage.</li>
+        <li>Go to your dashboard (button below) to download Limitless Trade Copier.</li>
         <li>Run the installer and launch the app.</li>
         <li>On first launch, paste the key above and click <strong>Activate</strong>.</li>
         <li>The license binds to your PC. Email support to move it later.</li>
@@ -186,8 +186,8 @@ h1 .accent { color: var(--gold); }
     </div>
 
     <div class="btn-row">
-      <a href="/" class="btn btn-ghost">Back to homepage</a>
-      <a href="mailto:support@limitlesscopier.com" class="btn btn-primary">Contact support</a>
+      <a href="/dashboard" id="dashboard-link" class="btn btn-primary">Go to your dashboard</a>
+      <a href="mailto:support@limitlesscopier.com" class="btn btn-ghost">Contact support</a>
     </div>
   </div>
 
@@ -198,7 +198,7 @@ h1 .accent { color: var(--gold); }
     <p class="lede" id="failed-message">Something didn't complete. You haven't been charged.</p>
     <div class="order-id" id="order-id-failed">Order: —</div>
     <div class="btn-row">
-      <a href="/checkout.html" class="btn btn-primary">Try again</a>
+      <a href="/checkout" class="btn btn-primary">Try again</a>
       <a href="mailto:support@limitlesscopier.com" class="btn btn-ghost">Contact support</a>
     </div>
   </div>
@@ -300,6 +300,12 @@ async function pollStatus() {
 function showPaid(key) {
   setActiveState('state-paid');
   document.getElementById('license-key').textContent = key || '—';
+  // Deep-link the dashboard button with the key so the customer lands
+  // straight into their dashboard (where they download the app).
+  if (key) {
+    const dl = document.getElementById('dashboard-link');
+    if (dl) dl.href = '/dashboard?key=' + encodeURIComponent(key);
+  }
   const btn = document.getElementById('copy-key-btn');
   btn.addEventListener('click', () => {
     if (!key) return;
