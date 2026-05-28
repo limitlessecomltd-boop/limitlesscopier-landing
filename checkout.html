@@ -816,7 +816,7 @@ function renderPrices() {
   // showing a number that doesn't match what admin actually charges.
   let total = cur.amount;
   const discountRow = document.getElementById("sumDiscountRow");
-  if (state.codeValid && state.codeKind === "discount" && state.discountUsd > 0) {
+  if (state.codeValid && state.discountUsd > 0) {
     if (state.payMethod === "crypto") {
       total = Math.max(1, cur.amount - state.discountUsd);
       if (discountRow) {
