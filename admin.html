@@ -27,8 +27,8 @@ input, select {
   padding: 11px 12px; border-radius: 9px; font-size: 14px; font-family: 'DM Sans', sans-serif;
 }
 input:focus, select:focus { outline: none; border-color: var(--gold); }
-.btn { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #1a1205; font-weight: 700; font-size: 14px; padding: 11px 18px; border: none; border-radius: 9px; cursor: pointer; }
-.btn:hover { transform: translateY(-1px); }
+.btn { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; font-weight: 700; font-size: 14px; letter-spacing: .04em; padding: 11px 18px; border: 1px solid transparent; border-radius: 8px; cursor: pointer; transition: all .25s; box-shadow: 0 0 30px rgba(255,215,0,.2); }
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 50px rgba(255,215,0,.4); }
 .btn:disabled { opacity: .5; cursor: default; }
 .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text); font-weight: 500; }
 .btn-ghost:hover { border-color: var(--gold); }
@@ -92,6 +92,7 @@ td.r, th.r { text-align: right; }
       <div class="tab" data-tab="users">Users</div>
       <div class="tab" data-tab="discounts">Discount Codes</div>
       <div class="tab" data-tab="commissions">Commissions</div>
+      <div class="tab" data-tab="payouts">Payouts</div>
       <div class="tab" data-tab="issue">Issue License</div>
     </div>
 
@@ -139,6 +140,19 @@ td.r, th.r { text-align: right; }
       <div class="card">
         <div id="dcList"><div class="empty">Loading…</div></div>
       </div>
+
+      <h2>Affiliate code discount</h2>
+      <div class="card">
+        <p class="sub">Pick a discount code that ALL affiliate codes grant to buyers. Affiliates still earn 20% (calculated on the discounted price). Set to "None" for no buyer discount on affiliate codes.</p>
+        <div class="row">
+          <div><label>Affiliate codes grant this discount</label>
+            <select id="affDiscSelect"><option value="">None — affiliate codes give no discount</option></select>
+          </div>
+          <div style="display:flex;align-items:flex-end;"><button class="btn" id="affDiscSaveBtn">Save</button></div>
+        </div>
+        <div class="err" id="affDiscErr"></div>
+        <div class="ok hidden" id="affDiscOk"></div>
+      </div>
     </div>
 
     <!-- COMMISSIONS TAB -->
@@ -147,6 +161,15 @@ td.r, th.r { text-align: right; }
       <p class="sub">Only "earned" commissions (past the 14-day hold) can be marked paid.</p>
       <div class="card">
         <div id="commList"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- PAYOUTS TAB -->
+    <div id="tab-payouts" class="hidden">
+      <h2>Payout requests</h2>
+      <p class="sub">Affiliates request payouts once their earned balance reaches $50. Marking one paid settles all their earned commissions and updates their paid total.</p>
+      <div class="card">
+        <div id="payoutList"><div class="empty">Loading…</div></div>
       </div>
     </div>
 
@@ -214,6 +237,7 @@ async function unlock() {
     $("panel").classList.remove("hidden");
     renderDiscounts(await res.json());  // pre-cache discounts tab
     loadOverview();                      // overview is the default tab
+    loadAffiliateDiscount();             // linked affiliate-discount setting
   } catch (e) {
     TOKEN = null;
     $("gateErr").textContent = "Couldn't reach the server.";
@@ -225,7 +249,10 @@ async function loadDiscounts() {
   const res = await fetch(`${API_BASE}/admin/discounts`, { headers: authHeaders(false) });
   renderDiscounts(await res.json());
 }
+let DISCOUNTS = [];
 function renderDiscounts(rows) {
+  DISCOUNTS = rows || [];
+  populateAffDiscDropdown();
   if (!rows || rows.length === 0) { $("dcList").innerHTML = `<div class="empty">No discount codes yet.</div>`; return; }
   let h = `<table><thead><tr><th>Code</th><th>Discount</th><th class="r">Used</th><th>Expires</th><th>Min</th><th>Status</th><th class="r">Action</th></tr></thead><tbody>`;
   for (const d of rows) {
@@ -305,10 +332,96 @@ async function loadCommissions() {
   });
 }
 
+// ---------- Payouts ----------
+async function loadPayouts() {
+  try {
+    const res = await fetch(`${API_BASE}/admin/payouts`, { headers: authHeaders(false) });
+    if (!res.ok) throw new Error("Couldn't load payouts.");
+    const rows = await res.json();
+    if (!rows || rows.length === 0) { $("payoutList").innerHTML = `<div class="empty">No payout requests yet.</div>`; return; }
+    let h = `<table><thead><tr><th>Code</th><th>Affiliate email</th><th class="r">Amount</th><th>Status</th><th>Requested</th><th>Details</th><th class="r">Action</th></tr></thead><tbody>`;
+    for (const p of rows) {
+      const canAct = p.status === "requested";
+      h += `<tr>
+        <td class="mono" style="color:var(--gold);">${p.affiliateCode || "—"}</td>
+        <td>${p.affiliateEmail || "—"}</td>
+        <td class="r">${fmtMoney(p.amountUsd)}</td>
+        <td><span class="pill ${p.status === "paid" ? "paid" : p.status === "rejected" ? "off" : "pending"}">${(p.status||"").toUpperCase()}</span></td>
+        <td class="muted">${fmtDate(p.requestedAt)}</td>
+        <td class="muted" style="max-width:200px;word-break:break-all;font-size:12px;">${p.payoutDetails || "—"}</td>
+        <td class="r">${canAct ? `<button class="btn btn-ghost btn-sm" data-pay="${p.id}">Mark paid</button> <button class="btn btn-ghost btn-sm" data-reject="${p.id}">Reject</button>` : (p.adminNotes ? `<span class="muted" style="font-size:12px;">${p.adminNotes}</span>` : "—")}</td>
+      </tr>`;
+    }
+    h += `</tbody></table>`;
+    $("payoutList").innerHTML = h;
+    $("payoutList").querySelectorAll("[data-pay]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        const notes = prompt("Payout notes (e.g. 'USDT TRC20 tx 0xabc…'):") || "";
+        const r = await fetch(`${API_BASE}/admin/payouts/${btn.dataset.pay}/mark-paid`, { method: "POST", headers: authHeaders(true), body: JSON.stringify({ notes }) });
+        if (!r.ok) { const e = await r.json().catch(()=>({})); alert(e.error || "Failed"); btn.disabled = false; return; }
+        loadPayouts();
+      });
+    });
+    $("payoutList").querySelectorAll("[data-reject]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        const notes = prompt("Reason for rejection (optional):") || "";
+        const r = await fetch(`${API_BASE}/admin/payouts/${btn.dataset.reject}/reject`, { method: "POST", headers: authHeaders(true), body: JSON.stringify({ notes }) });
+        if (!r.ok) { const e = await r.json().catch(()=>({})); alert(e.error || "Failed"); btn.disabled = false; return; }
+        loadPayouts();
+      });
+    });
+  } catch (e) {
+    $("payoutList").innerHTML = `<div class="empty">${e.message}</div>`;
+  }
+}
+
+// ---------- Affiliate-linked discount ----------
+let LINKED_AFF_DISCOUNT_ID = "";
+function populateAffDiscDropdown() {
+  const sel = $("affDiscSelect");
+  if (!sel) return;
+  const current = LINKED_AFF_DISCOUNT_ID;
+  let opts = `<option value="">None — affiliate codes give no discount</option>`;
+  for (const d of DISCOUNTS) {
+    const label = `${d.code} (${d.discountPercent > 0 ? d.discountPercent + "%" : fmtMoney(d.discountFlatUsd)})${d.enabled ? "" : " — disabled"}`;
+    opts += `<option value="${d.id}">${label}</option>`;
+  }
+  sel.innerHTML = opts;
+  sel.value = current || "";
+}
+async function loadAffiliateDiscount() {
+  try {
+    const res = await fetch(`${API_BASE}/admin/settings/affiliate-discount`, { headers: authHeaders(false) });
+    if (!res.ok) return;
+    const data = await res.json();
+    LINKED_AFF_DISCOUNT_ID = data.linkedDiscountCodeId || "";
+    populateAffDiscDropdown();
+  } catch (e) { /* non-fatal */ }
+}
+async function saveAffiliateDiscount() {
+  $("affDiscErr").textContent = ""; $("affDiscOk").classList.add("hidden");
+  const id = $("affDiscSelect").value;
+  const btn = $("affDiscSaveBtn"); btn.disabled = true;
+  try {
+    const res = await fetch(`${API_BASE}/admin/settings/affiliate-discount`, {
+      method: "POST", headers: authHeaders(true), body: JSON.stringify({ discountCodeId: id }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Save failed.");
+    LINKED_AFF_DISCOUNT_ID = id;
+    $("affDiscOk").textContent = id ? "Affiliate codes now grant this discount." : "Affiliate codes give no discount.";
+    $("affDiscOk").classList.remove("hidden");
+  } catch (e) { $("affDiscErr").textContent = e.message; }
+  finally { btn.disabled = false; }
+}
+
 // ---------- Wiring ----------
 $("gateBtn").addEventListener("click", unlock);
 $("tokenInput").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
 $("dcCreateBtn").addEventListener("click", createDiscount);
+$("affDiscSaveBtn").addEventListener("click", saveAffiliateDiscount);
 $("ilIssueBtn").addEventListener("click", issueLicense);
 ["uSearch","uPlan","uStatus","uAct"].forEach(id => {
   const el = $(id);
@@ -494,10 +607,12 @@ document.querySelectorAll(".tab").forEach(t => {
     $("tab-users").classList.toggle("hidden", which !== "users");
     $("tab-discounts").classList.toggle("hidden", which !== "discounts");
     $("tab-commissions").classList.toggle("hidden", which !== "commissions");
+    $("tab-payouts").classList.toggle("hidden", which !== "payouts");
     $("tab-issue").classList.toggle("hidden", which !== "issue");
     if (which === "overview") loadOverview();
     if (which === "users" && ALL_USERS.length === 0) loadUsers();
     if (which === "commissions") loadCommissions();
+    if (which === "payouts") loadPayouts();
   });
 });
 </script>

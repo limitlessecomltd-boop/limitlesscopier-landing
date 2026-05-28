@@ -22,10 +22,10 @@ a { color: var(--gold); text-decoration: none; }
 
 /* Header */
 .top { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
-.nav-mark { display: flex; align-items: center; gap: 5px; }
-.nav-mark .c1 { width: 9px; height: 9px; border-radius: 50%; background: var(--green); }
-.nav-mark .lens { width: 26px; height: 5px; border-radius: 3px; background: var(--gold); }
-.nav-mark .c2 { width: 9px; height: 9px; border-radius: 50%; background: var(--red); }
+.nav-mark { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+.nav-mark .c1 { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--green); transform: translateY(-50%); }
+.nav-mark .c2 { position: absolute; top: 50%; right: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--red); transform: translateY(-50%); }
+.nav-mark .lens { position: absolute; top: 50%; left: 50%; width: 6px; height: 18px; background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%); }
 .wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; }
 .tag { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .15em; color: var(--gold); }
 
@@ -41,15 +41,17 @@ input[type=text] {
 input[type=text]:focus { outline: none; border-color: var(--gold); }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #1a1205;
-  font-weight: 700; font-size: 15px; padding: 13px 22px; border: none; border-radius: 10px;
-  cursor: pointer; width: 100%; margin-top: 16px; transition: transform .1s, opacity .2s;
+  background: linear-gradient(135deg, #FFD700, #FFA500); color: #000;
+  font-weight: 700; font-size: 15px; letter-spacing: .04em; padding: 14px 24px;
+  border: 1px solid transparent; border-radius: 8px;
+  cursor: pointer; width: 100%; margin-top: 16px; transition: all .25s;
+  box-shadow: 0 0 40px rgba(255,215,0,.25);
 }
-.btn:hover { transform: translateY(-1px); }
-.btn:disabled { opacity: .55; cursor: default; transform: none; }
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 60px rgba(255,215,0,.45); }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
 .btn.loading { opacity: .7; cursor: default; }
-.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text); width: auto; padding: 9px 16px; font-size: 13px; font-weight: 500; margin: 0; }
-.btn-ghost:hover { border-color: var(--gold); }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text); width: auto; padding: 9px 16px; font-size: 13px; font-weight: 500; margin: 0; box-shadow: none; }
+.btn-ghost:hover { border-color: var(--gold); transform: none; box-shadow: none; }
 .err { color: var(--red); font-size: 13px; margin-top: 12px; min-height: 18px; }
 
 /* Dashboard */
@@ -195,6 +197,14 @@ td.r, th.r { text-align: right; }
       </div>
 
       <div class="note" id="payoutNote"></div>
+
+      <div id="payoutBox" style="margin-top:16px;">
+        <div class="claim-row" id="payoutRequestRow" style="display:none;">
+          <input type="text" id="payoutDetails" placeholder="USDT TRC20 address or other payout details" autocomplete="off">
+          <button class="btn" id="requestPayoutBtn" style="width:auto;margin:0;padding:0 18px;white-space:nowrap;">Request payout</button>
+        </div>
+        <div class="hint" id="payoutState"></div>
+      </div>
     </div>
 
     <!-- Referrals table -->
@@ -292,6 +302,25 @@ function render(data) {
   $("statReferrals").textContent = aff.totalReferrals != null ? aff.totalReferrals : 0;
   $("payoutNote").textContent = aff.payoutInstructions || "";
 
+  // Payout request UI
+  const row = $("payoutState");
+  const reqRow = $("payoutRequestRow");
+  if (aff.openPayoutRequest) {
+    reqRow.style.display = "none";
+    row.classList.remove("bad");
+    row.classList.add("ok");
+    row.textContent = `Payout request for ${fmtMoney(aff.openPayoutRequest.amountUsd)} is pending review.`;
+  } else if (aff.canRequestPayout) {
+    reqRow.style.display = "flex";
+    row.classList.remove("bad", "ok");
+    row.textContent = "";
+  } else {
+    reqRow.style.display = "none";
+    row.classList.remove("ok", "bad");
+    const need = (aff.payoutThresholdUsd || 50);
+    row.textContent = `Earn ${fmtMoney(need)} to request a payout (you have ${fmtMoney(aff.pendingBalanceUsd)} available).`;
+  }
+
   // Referrals table
   const refs = data.recentReferrals || [];
   if (refs.length === 0) {
@@ -338,6 +367,27 @@ async function claimSlug() {
 }
 
 // ---------- Resend ----------
+async function requestPayout() {
+  const btn = $("requestPayoutBtn");
+  const details = $("payoutDetails").value.trim();
+  btn.disabled = true; btn.classList.add("loading"); btn.textContent = "Requesting";
+  try {
+    const res = await fetch(`${API_BASE}/api/dashboard/${encodeURIComponent(currentKey)}/request-payout`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ payoutDetails: details }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Couldn't request payout.");
+    toast("Payout requested");
+    await loadDashboard(currentKey);
+  } catch (e) {
+    const row = $("payoutState");
+    row.classList.add("bad"); row.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading"); btn.textContent = "Request payout";
+  }
+}
+
 async function resendLicense() {
   const btn = $("resendBtn");
   btn.disabled = true; btn.classList.add("loading"); btn.textContent = "Sending…";
@@ -373,6 +423,7 @@ $("logoutBtn").addEventListener("click", () => {
 $("claimBtn").addEventListener("click", claimSlug);
 $("slugInput").addEventListener("keydown", (e) => { if (e.key === "Enter") claimSlug(); });
 $("resendBtn").addEventListener("click", resendLicense);
+$("requestPayoutBtn").addEventListener("click", requestPayout);
 $("copyCodeBtn").addEventListener("click", () => {
   const code = $("affCode").textContent;
   navigator.clipboard.writeText(code).then(() => toast("Code copied"));
